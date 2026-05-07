@@ -107,8 +107,6 @@ Windows(家)
 | Google アカウント | Antigravity を使う場合に必要(個人の Gmail アカウント可) |
 | 管理者権限 | あり(WSL インストール時に必要) |
 
-> **Claude アカウント**:[claude.ai](https://claude.ai) で **Pro プラン($20/月)以上** を契約してください。
-
 <details>
 <summary>▶ 📖 例えで詳しく理解する</summary>
 
