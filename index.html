@@ -121,7 +121,6 @@
         <div class="m-note-body">
             <p><strong>Claude Pro($20/月)</strong> は、専属の共同作業者を雇うための <strong>月謝</strong> のようなものです。学生にとって決して軽い額ではありませんが、これがないと共同作業者は来てくれません。</p>
             <p><strong>Antigravity</strong> を使うには Google AI Pro / Ultra のサブスクリプションが必要です(個人の Gmail で利用可)。プログラム参加者は事前にプログラム提供者に確認してください。</p>
-            <p>このマニュアルでは Antigravity を使った方法を中心に説明していますが、<strong>Antigravity を使わず、スタートメニューから直接 Ubuntu を起動する方法もあります</strong>(ステップ2 の「方法B」を参照)。</p>
         </div>
     </details>
 </section>
@@ -178,24 +177,17 @@
         </div>
     </details>
 
-    <h3>4-2. 開き方は3通りある</h3>
-    <table class="req">
-        <tr><th>方法</th><th>難易度</th><th>おすすめ度</th></tr>
-        <tr><td><strong>A. Antigravity から開く</strong></td><td>中</td><td>⭐⭐⭐ コードを書く人向け</td></tr>
-        <tr><td><strong>B. スタートメニューから「Ubuntu」を起動</strong></td><td>易</td><td>⭐⭐ 一番シンプル</td></tr>
-        <tr><td><strong>C. Windows Terminal アプリを使う</strong></td><td>易</td><td>⭐⭐ Microsoft 純正</td></tr>
-    </table>
-    <p>このマニュアルでは <strong>方法A(Antigravity)</strong> で進めます。Antigravity を使わない場合は <a href="#m4-6">4-6</a> へ。</p>
+    <h3>4-2. なぜ Antigravity を使うのか</h3>
+    <p>このマニュアルでは <strong>Antigravity</strong> から Ubuntu のターミナルを開きます。</p>
 
     <details class="m-note">
-        <summary>▶ なぜ Antigravity を使うのか</summary>
+        <summary>▶ 例えで詳しく理解する</summary>
         <div class="m-note-body">
             <p>Antigravity は Google の AI エージェント型 IDE で、Ubuntu のターミナルとコードエディタを <strong>1つの画面で同時に使える</strong> ので、Claude Code と相性がいいです。書斎の机の上に「<strong>原稿用紙(エディタ)</strong>」と「<strong>メモ帳(ターミナル)</strong>」を並べて置いてくれる、AI助手つきの作業ツール、というイメージです。</p>
-            <p>ただし、Antigravity を入れたくない人や、まずはシンプルに使いたい人は <strong>方法B</strong> でも全く問題ありません。</p>
         </div>
     </details>
 
-    <h3>4-3. 【方法A】Antigravity をインストール</h3>
+    <h3>4-3. Antigravity をインストール</h3>
     <h4>(1) ダウンロード</h4>
     <p>ブラウザで <a href="https://antigravity.google/download" target="_blank" rel="noopener">https://antigravity.google/download</a> を開き、「<strong>Download for Windows (x64)</strong>」をクリック(ARM 搭載の Surface などなら ARM64 版)。</p>
 
@@ -213,7 +205,7 @@
         <li>ブラウザで Google アカウントにログイン → 「許可」</li>
     </ol>
 
-    <h3>4-4. 【方法A】Antigravity から WSL Ubuntu に接続する</h3>
+    <h3>4-4. Antigravity から WSL Ubuntu に接続する</h3>
 
     <h4>(1) コマンドパレットを開く</h4>
     <pre><code>Ctrl + Shift + P</code></pre>
@@ -236,7 +228,7 @@
         </div>
     </details>
 
-    <h3>4-5. 【方法A】ターミナルを開く</h3>
+    <h3>4-5. ターミナルを開く</h3>
     <h4>ショートカット</h4>
     <pre><code>Ctrl + ` (バッククォート)</code></pre>
     <p class="hint">バッククォートはキーボード左上、<code>Esc</code> の下、<code>1</code> の左にあります(日本語キーボードでは Shift + @ で打てる場合あり)。</p>
@@ -252,21 +244,6 @@
     <pre data-lang="bash"><code>pwd</code></pre>
     <p>→ 現在いるフォルダ(例:<code>/home/taro</code>)が表示されます。</p>
     <p>これで <strong>ステップ3以降のすべての作業はこのターミナルで行います。</strong></p>
-
-    <h3 id="m4-6">4-6. 【方法B・C】Antigravity を使わない場合</h3>
-    <h4>方法B:スタートメニューから「Ubuntu」を起動</h4>
-    <ol>
-        <li><strong>Windowsキー</strong> → <code>ubuntu</code> と入力</li>
-        <li>「Ubuntu」アプリのアイコンをクリック</li>
-    </ol>
-
-    <h4>方法C:Windows Terminal</h4>
-    <ol>
-        <li><strong>Windowsキー</strong> → <code>terminal</code> と入力</li>
-        <li>「ターミナル」を起動</li>
-        <li>タブバーの <strong>下向き矢印 ▼</strong> → 「Ubuntu」を選択</li>
-    </ol>
-    <p class="hint">どの方法でも、開いた後の操作はまったく同じです。</p>
 </section>
 
 <!-- 5 -->

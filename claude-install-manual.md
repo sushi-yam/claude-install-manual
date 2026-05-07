@@ -114,8 +114,6 @@ Windows(家)
 
 **Antigravity** を使うには Google AI Pro / Ultra のサブスクリプションが必要です(個人の Gmail アカウントで利用可)。プログラムに参加する場合、利用方法は事前にプログラム提供者に確認してください。
 
-このマニュアルでは Antigravity を使った方法を中心に説明していますが、**Antigravity を使わず、スタートメニューから直接 Ubuntu を起動する方法もあります**(ステップ2 の「方法B」を参照)。
-
 </details>
 
 ---
@@ -169,7 +167,7 @@ wsl --install
 
 ---
 
-## 4. ステップ2:Ubuntu のターミナルを開く(Antigravity を使う方法)
+## 4. ステップ2:Ubuntu のターミナルを開く
 
 ### 4-1. ターミナルとは?
 
@@ -192,28 +190,20 @@ taro@DESKTOP-ABC123:~$ ▮
 
 </details>
 
-### 4-2. 開き方は3通りある
+### 4-2. なぜ Antigravity を使うのか
 
-| 方法 | 難易度 | おすすめ度 |
-|---|---|---|
-| **A. Antigravity から開く** | 中 | ⭐⭐⭐ コードを書く人向け |
-| **B. スタートメニューから「Ubuntu」を起動** | 易 | ⭐⭐ 一番シンプル |
-| **C. Windows Terminal アプリを使う** | 易 | ⭐⭐ Microsoft 純正 |
-
-このマニュアルでは **方法A(Antigravity)** で進めます。Antigravity を使わない場合は [4-6](#4-6-方法bcantigravity-を使わない場合) へ。
+このマニュアルでは **Antigravity** から Ubuntu のターミナルを開きます。
 
 <details>
-<summary>▶ 📖 なぜ Antigravity を使うのか</summary>
+<summary>▶ 📖 例えで詳しく理解する</summary>
 
 Antigravity は Google が提供している AI エージェント型 IDE(コードエディタ)で、Ubuntu のターミナルとコードエディタを **1つの画面で同時に使える** ので、Claude Code のような AI ツールと相性がいいです。
 
 書斎の机の上に「**原稿用紙(エディタ)**」と「**メモ帳(ターミナル)**」を並べて置いてくれる、AI助手つきの作業ツール、というイメージです。
 
-ただし、Antigravity を入れたくない人や、まずはシンプルに使いたい人は **方法B** でも全く問題ありません。
-
 </details>
 
-### 4-3. 【方法A】Antigravity をインストール
+### 4-3. Antigravity をインストール
 
 #### (1) ダウンロード
 
@@ -231,7 +221,7 @@ Antigravity は Google が提供している AI エージェント型 IDE(コー
 2. 「**Sign in with Google**」をクリック
 3. ブラウザで Google アカウントにログイン → 「許可」
 
-### 4-4. 【方法A】Antigravity から WSL Ubuntu に接続する
+### 4-4. Antigravity から WSL Ubuntu に接続する
 
 #### (1) コマンドパレットを開く
 
@@ -272,7 +262,7 @@ Antigravity は通常、家(Windows)の机に座っています。ここで「**
 
 </details>
 
-### 4-5. 【方法A】ターミナルを開く
+### 4-5. ターミナルを開く
 
 #### ショートカット
 
@@ -311,21 +301,6 @@ pwd
 → 現在いるフォルダ(例:`/home/taro`)が表示されます。
 
 これで **ステップ3以降のすべての作業はこのターミナルで行います。**
-
-### 4-6. 【方法B・C】Antigravity を使わない場合
-
-#### 方法B:スタートメニューから「Ubuntu」を起動
-
-1. **Windowsキー** → `ubuntu` と入力
-2. 「Ubuntu」アプリのアイコンをクリック
-
-#### 方法C:Windows Terminal
-
-1. **Windowsキー** → `terminal` と入力
-2. 「ターミナル」を起動
-3. タブバーの **下向き矢印 ▼** → 「Ubuntu」を選択
-
-> 💡 どの方法でも、開いた後の操作はまったく同じです。
 
 ---
 
