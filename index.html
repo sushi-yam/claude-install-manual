@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code インストールマニュアル(Windows・初心者向け)</title>
+    <meta name="description" content="Windows に Claude Code と agent-logs をインストールする、初心者向けの手順書。ターミナル未経験でも進められます。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Noto+Serif+JP:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<aside class="toc" id="toc">
+    <div class="toc-inner">
+        <p class="toc-title">目次</p>
+        <ol>
+            <li><a href="#s1">全体の流れ</a></li>
+            <li><a href="#s2">必要なもの</a></li>
+            <li><a href="#s3">ステップ1:WSL</a></li>
+            <li><a href="#s4">ステップ2:ターミナルを開く</a></li>
+            <li><a href="#s5">ステップ3:Ubuntu 初期設定</a></li>
+            <li><a href="#s6">ステップ4:Claude Code</a></li>
+            <li><a href="#s7">ステップ5:agent-logs</a></li>
+            <li><a href="#s8">ステップ6:claude を起動</a></li>
+            <li><a href="#s9">補足:bash と zsh</a></li>
+            <li><a href="#s10">補足:curl | bash</a></li>
+            <li><a href="#s11">トラブル対処</a></li>
+            <li><a href="#s12">アンインストール</a></li>
+        </ol>
+    </div>
+</aside>
+
+<button class="toc-toggle" id="toc-toggle" aria-label="目次を開く">目次</button>
+
+<main>
+
+<header class="hero">
+    <p class="kicker">web3 概論 2026 · week03 · sushi yam</p>
+    <h1>Claude Code <span>インストールマニュアル</span></h1>
+    <p class="lead">Windows 10 / 11 のパソコンに、AI と一緒に作業できる「書斎」を建てる手順書。<br>ターミナルを使ったことがない人でも進められます。</p>
+    <p class="meta">所要時間 30〜60分</p>
+</header>
+
+<section class="reading-modes">
+    <h2>このマニュアルの読み方(2通り)</h2>
+    <div class="mode-grid">
+        <div class="mode">
+            <p class="mode-title">A. とにかくインストールだけ終わらせたい</p>
+            <p>各ステップの <strong>コマンド</strong> と <span class="ok-inline">✅成功サイン</span> だけを順に追えば完了します。</p>
+        </div>
+        <div class="mode">
+            <p class="mode-title">B. 一つずつ理解しながら進めたい</p>
+            <p>各所にある <code>▶ 例えで詳しく理解する</code> をクリックすると、その操作が <strong>何をしているのか</strong> を例え話で解説します。</p>
+        </div>
+    </div>
+
+    <details class="m-note">
+        <summary>▶ このマニュアル全体を貫く「例え」</summary>
+        <div class="m-note-body">
+            <p>Windows という <strong>家</strong> の中に、Linux という <strong>書斎</strong> を増築し、その書斎にある <strong>作業机(ターミナル)</strong> で、<strong>専属の共同作業者(Claude Code)</strong> と一緒に原稿を書けるようにする ― これが、ここでやろうとしていることです。</p>
+            <p>書斎で書いた原稿は、いずれ <strong>本棚(GitHub)</strong> に納められ、<strong>ショーケース(Vercel)</strong> に並べられます。今回はその最初の2歩 ― <strong>書斎を建てて、共同作業者を迎えに行く</strong> ― です。</p>
+            <table class="metaphor-table">
+                <tr><th>技術概念</th><th>例え</th></tr>
+                <tr><td>Windows</td><td>あなたの <strong>家</strong></td></tr>
+                <tr><td>WSL2</td><td>家に増築する <strong>書斎</strong></td></tr>
+                <tr><td>Ubuntu</td><td>書斎の <strong>内装</strong></td></tr>
+                <tr><td>ターミナル</td><td>書斎の <strong>作業机</strong></td></tr>
+                <tr><td>bash / zsh</td><td>机での <strong>作業ルール(方言)</strong></td></tr>
+                <tr><td><code>~/.bashrc</code></td><td>朝、机に座る前に開く <strong>備忘録</strong></td></tr>
+                <tr><td>Antigravity</td><td>AI助手つきの <strong>執筆机ツール</strong></td></tr>
+                <tr><td><strong>Claude Code</strong></td><td>専属の <strong>共同作業者</strong></td></tr>
+                <tr><td><strong>agent-logs</strong></td><td><strong>研究ノート</strong></td></tr>
+                <tr><td><code>curl ... | bash</code></td><td><strong>遠方の師匠が直送する道具一式を、その場で組み立てる</strong></td></tr>
+                <tr><td><code>sudo</code></td><td>家の管理者の <strong>印鑑</strong></td></tr>
+                <tr><td><strong>GitHub</strong></td><td><strong>本棚</strong></td></tr>
+                <tr><td><strong>Vercel</strong></td><td><strong>ショーケース</strong></td></tr>
+            </table>
+        </div>
+    </details>
+</section>
+
+<!-- 1 -->
+<section id="s1">
+    <h2><span class="num">1</span>全体の流れ</h2>
+    <pre><code>Windows
+  ├── Antigravity(IDE — Ubuntu のターミナルを開く窓口)
+  └── WSL2(Linux 環境)
+        └── Ubuntu(Linux の一種)
+              ├── Claude Code(本体)
+              └── agent-logs(ログ共有ツール)</code></pre>
+    <p>完了までの所要時間: <strong>30〜60分</strong>(ダウンロード時間込み)</p>
+
+    <details class="m-note">
+        <summary>▶ 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <p>Claude Code は Linux / macOS 用に作られているので、Windows ではそのままでは動きません。Windows は和室の家、Claude は洋室で生まれた住人。直接は同居できないので、<strong>家の中に「Linux 仕様の書斎」を増築</strong> して、そこに住んでもらう、というイメージです。</p>
+            <p>その「書斎」を作る仕組みが <strong>WSL(Windows Subsystem for Linux)</strong> です。書斎の内装には Linux の中でも一番ポピュラーな <strong>Ubuntu</strong> を使います。</p>
+            <p>書斎の中で作業するときの「机」として、ここでは <strong>Antigravity</strong>(Google の AI エージェント型 IDE)を窓口に使います。</p>
+        </div>
+    </details>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+    <h2><span class="num">2</span>必要なもの・前提条件</h2>
+    <table class="req">
+        <tr><th>項目</th><th>必要条件</th></tr>
+        <tr><td>OS</td><td>Windows 10(バージョン2004 以降)または Windows 11</td></tr>
+        <tr><td>メモリ</td><td>4GB 以上(8GB 以上を推奨)</td></tr>
+        <tr><td>ディスク空き容量</td><td>10GB 以上</td></tr>
+        <tr><td>インターネット</td><td>安定した接続</td></tr>
+        <tr><td>Claude アカウント</td><td>Claude Pro / Max / Team / Enterprise のいずれか(<strong>無料プランでは不可</strong>)</td></tr>
+        <tr><td>Google アカウント</td><td>Antigravity を使う場合に必要(個人の Gmail 可)</td></tr>
+        <tr><td>管理者権限</td><td>あり(WSL インストール時に必要)</td></tr>
+    </table>
+    <div class="note">Claude アカウント:<a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> で <strong>Pro プラン($20/月)以上</strong> を契約してください。</div>
+
+    <details class="m-note">
+        <summary>▶ 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <p><strong>Claude Pro($20/月)</strong> は、専属の共同作業者を雇うための <strong>月謝</strong> のようなものです。学生にとって決して軽い額ではありませんが、これがないと共同作業者は来てくれません。</p>
+            <p><strong>Antigravity</strong> を使うには Google AI Pro / Ultra のサブスクリプションが必要です(個人の Gmail で利用可)。プログラム参加者は事前にプログラム提供者に確認してください。</p>
+            <p>このマニュアルでは Antigravity を使った方法を中心に説明していますが、<strong>Antigravity を使わず、スタートメニューから直接 Ubuntu を起動する方法もあります</strong>(ステップ2 の「方法B」を参照)。</p>
+        </div>
+    </details>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+    <h2><span class="num">3</span>ステップ1:WSL(Ubuntu)をインストールする</h2>
+
+    <h3>3-1. PowerShell を「管理者として」開く</h3>
+    <ol>
+        <li><strong>Windowsキー</strong> を押す</li>
+        <li><code>powershell</code> と入力</li>
+        <li>「Windows PowerShell」を <strong>右クリック → 「管理者として実行」</strong></li>
+        <li>「変更を加えることを許可しますか?」→ <strong>「はい」</strong></li>
+    </ol>
+    <div class="ok"><strong>✅ 成功サイン</strong>:<code>PS C:\WINDOWS\system32&gt;</code> と表示されたウィンドウが開く。</div>
+
+    <h3>3-2. WSL をインストールする</h3>
+    <pre data-lang="powershell"><code>wsl --install</code></pre>
+    <p>完了まで <strong>5〜10分</strong>。</p>
+
+    <h3>3-3. パソコンを再起動する</h3>
+    <p>「再起動してください」と表示されたら <strong>必ず再起動</strong>。</p>
+
+    <h3>3-4. 再起動完了</h3>
+    <p>再起動後、初回だけ Ubuntu のウィンドウが自動で立ち上がり、<code>Installing, this may take a few minutes...</code> と表示されます。数分待ちます。このウィンドウは閉じてもOK。</p>
+    <div class="warn"><code>wsl --install</code> で「仮想化が無効」というエラーが出たら、<a href="#s11">ステップ11</a> を参照。</div>
+
+    <details class="m-note">
+        <summary>▶ 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <p><strong>このステップでやること</strong>:家の中に <strong>書斎(WSL)</strong> を増築し、内装(Ubuntu)を整える。</p>
+            <p><strong>PowerShell</strong> は、Windows に標準で付いている管理用の作業窓です。普段は使いませんが、書斎を増築するときだけ「<strong>管理者の印鑑つき</strong>」で開く必要があります。</p>
+            <p><code>wsl --install</code> というコマンド一発で、WSL2 本体(増築工事の枠組み)と Ubuntu(書斎の標準内装)の両方が一度にインストールされます。</p>
+            <p><strong>再起動は必須</strong>:再起動しないと WSL は使えません(増築工事は終わったが、ブレーカーが上がっていない状態)。</p>
+        </div>
+    </details>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+    <h2><span class="num">4</span>ステップ2:Ubuntu のターミナルを開く</h2>
+
+    <h3>4-1. ターミナルとは?</h3>
+    <p>コマンド(命令文)を打ち込んで OS を操作する <strong>黒い画面</strong> のことです。</p>
+    <pre><code>taro@DESKTOP-ABC123:~$ ▮</code></pre>
+    <p><code>taro@DESKTOP-ABC123:~$</code> の部分を <strong>プロンプト</strong> と呼び、ここにコマンドを入力 → Enter で実行されます。このマニュアルで「Ubuntu のターミナル」「WSL のターミナル」と書いてある場所はすべて、この画面のことを指しています。</p>
+
+    <details class="m-note">
+        <summary>▶ 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <p>普段の Windows はマウスでアイコンをクリックして操作しますが、Linux(Ubuntu)では <strong>キーボードで命令を打ち込んで</strong> 操作します。</p>
+            <p>プロンプトは、書斎の机の上に置かれた「ご注文をどうぞ」のメモ帳。あなたが書き込んだ一行を、書斎の住人(Linux)が読み上げて実行してくれます。</p>
+        </div>
+    </details>
+
+    <h3>4-2. 開き方は3通りある</h3>
+    <table class="req">
+        <tr><th>方法</th><th>難易度</th><th>おすすめ度</th></tr>
+        <tr><td><strong>A. Antigravity から開く</strong></td><td>中</td><td>⭐⭐⭐ コードを書く人向け</td></tr>
+        <tr><td><strong>B. スタートメニューから「Ubuntu」を起動</strong></td><td>易</td><td>⭐⭐ 一番シンプル</td></tr>
+        <tr><td><strong>C. Windows Terminal アプリを使う</strong></td><td>易</td><td>⭐⭐ Microsoft 純正</td></tr>
+    </table>
+    <p>このマニュアルでは <strong>方法A(Antigravity)</strong> で進めます。Antigravity を使わない場合は <a href="#m4-6">4-6</a> へ。</p>
+
+    <details class="m-note">
+        <summary>▶ なぜ Antigravity を使うのか</summary>
+        <div class="m-note-body">
+            <p>Antigravity は Google の AI エージェント型 IDE で、Ubuntu のターミナルとコードエディタを <strong>1つの画面で同時に使える</strong> ので、Claude Code と相性がいいです。書斎の机の上に「<strong>原稿用紙(エディタ)</strong>」と「<strong>メモ帳(ターミナル)</strong>」を並べて置いてくれる、AI助手つきの作業ツール、というイメージです。</p>
+            <p>ただし、Antigravity を入れたくない人や、まずはシンプルに使いたい人は <strong>方法B</strong> でも全く問題ありません。</p>
+        </div>
+    </details>
+
+    <h3>4-3. 【方法A】Antigravity をインストール</h3>
+    <h4>(1) ダウンロード</h4>
+    <p>ブラウザで <a href="https://antigravity.google/download" target="_blank" rel="noopener">https://antigravity.google/download</a> を開き、「<strong>Download for Windows (x64)</strong>」をクリック(ARM 搭載の Surface などなら ARM64 版)。</p>
+
+    <h4>(2) インストール</h4>
+    <ol>
+        <li>ダウンロードした <code>.exe</code> をダブルクリック</li>
+        <li>「次へ」「同意する」「インストール」</li>
+        <li>完了まで <strong>1〜3分</strong></li>
+    </ol>
+
+    <h4>(3) Google アカウントでサインイン</h4>
+    <ol>
+        <li>自動で起動(しなければスタートメニューから「Antigravity」を検索)</li>
+        <li>「<strong>Sign in with Google</strong>」をクリック</li>
+        <li>ブラウザで Google アカウントにログイン → 「許可」</li>
+    </ol>
+
+    <h3>4-4. 【方法A】Antigravity から WSL Ubuntu に接続する</h3>
+
+    <h4>(1) コマンドパレットを開く</h4>
+    <pre><code>Ctrl + Shift + P</code></pre>
+    <p>画面上部に細長い検索窓が出る。</p>
+
+    <h4>(2) WSL に接続</h4>
+    <p>検索窓に入力:</p>
+    <pre><code>Remote-WSL: Connect to WSL</code></pre>
+    <p>候補をクリック(または Enter)。</p>
+
+    <h4>(3) 新しいウィンドウが開く</h4>
+    <p>数秒〜十数秒待つと、新しいウィンドウが開きます。</p>
+    <div class="ok"><strong>✅ 成功サイン</strong>:画面の <strong>左下</strong> に <code>&gt;&lt; WSL: Ubuntu</code> が表示される。出ていなければ (1) からやり直し。古いウィンドウは閉じてOK。</div>
+
+    <details class="m-note">
+        <summary>▶ 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <p><strong>コマンドパレット</strong> は、Antigravity の機能を文字で検索して呼び出せる便利な機能です。</p>
+            <p>Antigravity は通常、家(Windows)の机に座っています。ここで「<strong>書斎モード</strong>」に切り替えると、机ごと書斎(WSL)に引っ越す感覚です。<code>&gt;&lt; WSL: Ubuntu</code> の表示は、「いま書斎の中にいますよ」という札のようなものです。</p>
+        </div>
+    </details>
+
+    <h3>4-5. 【方法A】ターミナルを開く</h3>
+    <h4>ショートカット</h4>
+    <pre><code>Ctrl + ` (バッククォート)</code></pre>
+    <p class="hint">バッククォートはキーボード左上、<code>Esc</code> の下、<code>1</code> の左にあります(日本語キーボードでは Shift + @ で打てる場合あり)。</p>
+
+    <h4>メニューから開く場合</h4>
+    <pre><code>View(表示) → Terminal(ターミナル)</code></pre>
+
+    <h4>動作確認</h4>
+    <div class="ok"><strong>✅ 成功サイン</strong>:画面下部に黒いパネルが現れ、<code>taro@DESKTOP-ABC123:~$ ▮</code> が表示される。</div>
+    <p>試しに以下を打ってみてください:</p>
+    <pre data-lang="bash"><code>whoami</code></pre>
+    <p>→ 自分のユーザー名(例:<code>taro</code>)が表示されればOK。</p>
+    <pre data-lang="bash"><code>pwd</code></pre>
+    <p>→ 現在いるフォルダ(例:<code>/home/taro</code>)が表示されます。</p>
+    <p>これで <strong>ステップ3以降のすべての作業はこのターミナルで行います。</strong></p>
+
+    <h3 id="m4-6">4-6. 【方法B・C】Antigravity を使わない場合</h3>
+    <h4>方法B:スタートメニューから「Ubuntu」を起動</h4>
+    <ol>
+        <li><strong>Windowsキー</strong> → <code>ubuntu</code> と入力</li>
+        <li>「Ubuntu」アプリのアイコンをクリック</li>
+    </ol>
+
+    <h4>方法C:Windows Terminal</h4>
+    <ol>
+        <li><strong>Windowsキー</strong> → <code>terminal</code> と入力</li>
+        <li>「ターミナル」を起動</li>
+        <li>タブバーの <strong>下向き矢印 ▼</strong> → 「Ubuntu」を選択</li>
+    </ol>
+    <p class="hint">どの方法でも、開いた後の操作はまったく同じです。</p>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+    <h2><span class="num">5</span>ステップ3:Ubuntu の初期設定</h2>
+
+    <h3>5-1. ユーザー名とパスワードを決める</h3>
+    <pre><code>Enter new UNIX username:</code></pre>
+    <p>→ <strong>半角英小文字</strong> でユーザー名(例:<code>taro</code>)。大文字・記号・スペースは不可。</p>
+    <pre><code>New password:
+Retype new password:</code></pre>
+    <p>→ パスワードを2回入力。<strong>入力中は何も表示されませんが、ちゃんと打てています。</strong></p>
+
+    <h3>5-2. パッケージを最新にする</h3>
+    <p>プロンプト(<code>taro@DESKTOP-XXX:~$</code>)が出たら:</p>
+    <pre data-lang="bash"><code>sudo apt update && sudo apt upgrade -y</code></pre>
+    <p>最初に <strong>パスワードを聞かれます</strong>(さっき設定したもの)。これも入力中は表示されません。完了まで <strong>2〜5分</strong>。</p>
+    <div class="ok"><strong>✅ 成功サイン</strong>:エラーなくプロンプトに戻る。</div>
+
+    <details class="m-note">
+        <summary>▶ 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <p><strong>このステップでやること</strong>:書斎の住人としての <strong>自分の名前と鍵</strong> を登録し、内装を最新に整える。</p>
+            <p>このパスワードは、家の管理者の <strong>印鑑(sudo)</strong> の暗証番号です。書斎の重要な工事(管理者権限が必要なコマンド)をするときに、毎回これで本人確認します。</p>
+            <p><code>sudo apt update && sudo apt upgrade -y</code> の意味:</p>
+            <ul>
+                <li><code>sudo</code> … 管理者権限で実行する命令(=印鑑を押す)</li>
+                <li><code>apt update</code> … インストール可能なソフトのリストを更新(=書店の最新カタログを取り寄せる)</li>
+                <li><code>apt upgrade -y</code> … 既存ソフトを最新版にアップグレード(<code>-y</code> は「全部はい」)</li>
+            </ul>
+        </div>
+    </details>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+    <h2><span class="num">6</span>ステップ4:Claude Code をインストールする</h2>
+
+    <h3>6-1. インストールコマンド</h3>
+    <pre data-lang="bash"><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre>
+
+    <h3>6-2. ターミナルを開き直す</h3>
+    <p>ターミナルを一度閉じて開き直す。または:</p>
+    <pre data-lang="bash"><code>source ~/.bashrc</code></pre>
+
+    <h3>6-3. インストール確認</h3>
+    <pre data-lang="bash"><code>claude --version</code></pre>
+    <div class="ok"><strong>✅ 成功サイン</strong>:バージョン番号(例:<code>2.1.126</code>)が表示される。</div>
+
+    <div class="warn"><strong>重要</strong>:ここではまだ <code>claude</code> コマンド本体は実行しません。 agent-logs(次のステップ)を入れる前に <code>claude</code> を起動すると、agent-logs のラッパー(同意確認の仕組み)を通らずに Claude が起動してしまうためです。Anthropic アカウントへのログインは、ステップ8で agent-logs が立ち上がった後に自動で促されます。</div>
+
+    <details class="m-note">
+        <summary>▶ 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <p><strong>このステップでやること</strong>:書斎に <strong>専属の共同作業者(Claude Code)</strong> を雇い入れる。</p>
+            <p><code>curl -fsSL ... | bash</code> というワンライナーは、<strong>遠方の師匠が直送する道具一式を、その場で開封して書斎に組み立てる</strong> 一連の作業を、一行に圧縮したものです。詳しい仕組みは <a href="#s10">10章</a> を参照。</p>
+            <p><code>~/.bashrc</code> は、<strong>机に座る前に毎朝開く備忘録</strong>(「今日からこの新人さんも仲間ね」と書かれた紙)です。<code>source</code> は「<strong>今すぐその備忘録を読み直して!</strong>」という指示です。詳しくは <a href="#s9">9章</a> を参照。</p>
+        </div>
+    </details>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+    <h2><span class="num">7</span>ステップ5:agent-logs をインストールする</h2>
+    <p class="hint">ここからは <strong>Chiba Tech / Henkaku Center のリサーチプログラム参加者向け</strong>。プログラム参加者でない人は飛ばしてOK。</p>
+
+    <h3>7-1. インストールコマンド</h3>
+    <pre data-lang="bash"><code>curl -fsSL https://agent-logs.chibatech.dev/install.sh | bash</code></pre>
+
+    <h3>7-2. シェル設定を反映</h3>
+    <pre data-lang="bash"><code>source ~/.bashrc</code></pre>
+
+    <h3>7-3. インストール確認</h3>
+    <pre data-lang="bash"><code>agent-logs doctor</code></pre>
+    <div class="ok"><strong>✅ 成功サイン</strong>:設定や接続の状態が表示される。</div>
+
+    <details class="m-note">
+        <summary>▶ 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <p><strong>このステップでやること</strong>:書斎の机に <strong>研究ノート(agent-logs)</strong> を備え付ける。Claude との対話の記録が、研究プログラムに自動で共有されるようになる。</p>
+            <p>このスクリプトは以下を行います(配布元 <a href="https://github.com/henkaku-center/agent-logs" target="_blank" rel="noopener">github.com/henkaku-center/agent-logs</a>):</p>
+            <ol>
+                <li><strong>agent-logs CLI 本体</strong> をインストール</li>
+                <li>Claude Code に <strong>フック</strong>(セッション終了時に自動でログ送信する仕組み)を登録</li>
+                <li><code>claude</code> コマンドを <strong>同意確認ラッパーで包む</strong></li>
+                <li>シェルの設定ファイル(<code>~/.bashrc</code>)に必要な設定を追記</li>
+            </ol>
+            <p>研究ノートは、机の引き出しに常駐して、あなたと Claude の対話を記録します。ノートを「持つかどうか」「どのフォルダのログを共有するか」は、あなたが選べます(ステップ8で確認されます)。</p>
+        </div>
+    </details>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+    <h2><span class="num">8</span>ステップ6:claude を起動する</h2>
+    <p>ここで初めて <code>claude</code> コマンドを実行します。実行すると、以下が順番に発生します:</p>
+    <pre><code>claude を実行
+  ↓
+agent-logs ラッパーが起動
+  ① メール認証(6桁コード)
+  ② 同意フォーム署名のチェック(初回のみ、ブラウザで署名)
+  ③ このフォルダのログを共有するかどうかの確認
+       ↓
+本物の Claude Code が起動
+  ④ Anthropic アカウントの OAuth ログイン(初回のみ、ブラウザが開く)
+       ↓
+Claude が使えるようになる</code></pre>
+
+    <details class="m-note">
+        <summary>▶ 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <p><strong>このステップでやること</strong>:共同作業者(Claude)に「<strong>初出勤</strong>」してもらう。研究ノートが受付係として、本人確認・同意書確認・このフォルダの共有可否確認をしてから、Claude を呼び込みます。</p>
+        </div>
+    </details>
+
+    <h3>8-1. プロジェクトフォルダに移動</h3>
+    <pre data-lang="bash"><code>mkdir -p ~/projects/my-first-project
+cd ~/projects/my-first-project</code></pre>
+
+    <h3>8-2. claude を起動</h3>
+    <pre data-lang="bash"><code>claude</code></pre>
+
+    <h3>8-3. ① メール認証(agent-logs)</h3>
+    <pre><code>────────────────────────────────────────────────────
+Agent Logging Authentication
+
+Verification code sent to あなた@example.com
+Enter the 6-digit code from your email: ▮</code></pre>
+    <ol>
+        <li>Claude アカウントのメールに届いた <strong>6桁のコード</strong> を確認</li>
+        <li>ターミナルに入力 → Enter</li>
+    </ol>
+
+    <h3>8-4. ② 同意フォームに署名(初回のみ)</h3>
+    <pre><code>────────────────────────────────────────────────────
+Agent Logs — Consent Required
+
+You must sign the informed consent form before using Claude.
+Visit the portal to read and sign:
+
+    https://agent-logs.chibatech.dev/portal.html</code></pre>
+    <ol>
+        <li>ブラウザで <a href="https://agent-logs.chibatech.dev/portal.html" target="_blank" rel="noopener">agent-logs.chibatech.dev/portal.html</a> を開く</li>
+        <li><strong>インフォームド・コンセント(研究同意書)</strong> を読んで署名</li>
+        <li>ターミナルに戻って <strong>もう一度 <code>claude</code></strong> を実行</li>
+    </ol>
+
+    <h3>8-5. ③ このフォルダの共有可否を選ぶ</h3>
+    <pre><code>Share session logs for this workspace?
+/home/taro/projects/my-first-project
+
+❯ 1. Yes, share this folder
+  2. No, don't share</code></pre>
+    <ul>
+        <li><strong>矢印キー(↑↓)</strong> で選択</li>
+        <li><strong>Enter</strong> で決定</li>
+    </ul>
+    <p>この選択は <strong>フォルダ毎に1回だけ</strong> 聞かれます。</p>
+
+    <h3>8-6. ④ Anthropic アカウントでログイン(Claude Code 初回のみ)</h3>
+    <p>agent-logs のチェックを通過すると、ブラウザで Anthropic のログイン画面が開きます。</p>
+    <ol>
+        <li>Claude Pro / Max などのアカウントでログイン</li>
+        <li>「許可」を押してターミナルに戻る</li>
+        <li><code>Login successful</code> が表示されれば完了</li>
+    </ol>
+
+    <h3>8-7. Claude を使い始める</h3>
+    <p>Claude のプロンプト(<code>&gt;</code>)が出たら:</p>
+    <pre><code>&gt; hello</code></pre>
+    <div class="ok"><strong>✅ 成功サイン</strong>:Claude が応答する。<strong>おめでとうございます。書斎の建設は完了です。</strong></div>
+
+    <h3>8-8. 共有される/されないもの</h3>
+    <table class="req">
+        <tr><th>共有される</th><th>共有されない</th></tr>
+        <tr><td>あなたのプロンプト</td><td>ファイルの中身(<code>tool_result</code> の中身は除去される)</td></tr>
+        <tr><td>Claude の返答</td><td>ファイル全体のスナップショット</td></tr>
+        <tr><td>ツール呼び出しの「名前」</td><td>添付ファイル</td></tr>
+    </table>
+    <p class="hint"><strong>2回目以降</strong>の <code>claude</code> 実行では、メール認証も OAuth も省略され、共有可否も新しいフォルダのときだけ聞かれます。普通に <code>claude</code> を打つだけで起動します。</p>
+
+    <details class="m-note">
+        <summary>▶ 8-1 のフォルダを作る理由</summary>
+        <div class="m-note-body">
+            <p>プロジェクトフォルダ毎に「共有する/しない」を選ぶ設計なので、まず作業フォルダに入った状態で <code>claude</code> を実行する必要があります。書斎の中に、最初の <strong>作業用ファイルキャビネット</strong> を1つ作って、その前に椅子を移動させた状態です。</p>
+            <ul>
+                <li><code>mkdir -p</code> … フォルダを作る(<code>-p</code> は親フォルダも含めて作る)</li>
+                <li><code>cd</code> … そのフォルダに移動</li>
+            </ul>
+        </div>
+    </details>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+    <h2><span class="num">9</span>補足:bash と zsh について</h2>
+    <details class="m-note">
+        <summary>▶ シェルとは何か / bash と zsh の違い / <code>~/.bashrc</code> とは</summary>
+        <div class="m-note-body">
+            <h4>シェルとは?</h4>
+            <p>ターミナルに打ったコマンドを解釈して OS に伝えるプログラムを <strong>シェル</strong> と呼びます。「ターミナル(画面)」と「シェル(中身)」は別物です。ターミナルは <strong>机そのもの</strong>、シェルは <strong>机での作業ルール(方言)</strong> です。</p>
+            <h4>bash と zsh の違い</h4>
+            <table class="req">
+                <tr><th></th><th>bash</th><th>zsh</th></tr>
+                <tr><td>正式名</td><td>Bourne Again SHell</td><td>Z Shell</td></tr>
+                <tr><td>WSL Ubuntu のデフォルト</td><td>✅</td><td></td></tr>
+                <tr><td>macOS のデフォルト(2019年以降)</td><td></td><td>✅</td></tr>
+                <tr><td>設定ファイル</td><td><code>~/.bashrc</code></td><td><code>~/.zshrc</code></td></tr>
+                <tr><td>機能</td><td>標準的・互換性高</td><td>補完が強力・テーマ豊富</td></tr>
+            </table>
+            <p>Windows + WSL を使うあなたのデフォルトは <strong>bash</strong> です。よって、設定ファイルは <code>~/.bashrc</code> を使います。</p>
+            <h4><code>~/.bashrc</code> とは</h4>
+            <p><code>~</code> は <strong>ホームディレクトリ</strong>(あなた専用フォルダ、例:<code>/home/taro</code>)。<code>.bashrc</code> はその中にある「<strong>ターミナルを開くたびに自動で読み込まれる設定ファイル</strong>」です。毎朝、机に座る前に開く <strong>備忘録</strong> のようなもの。</p>
+            <h4><code>source ~/.bashrc</code> の意味</h4>
+            <p><code>.bashrc</code> の内容を <strong>今開いているターミナルに即座に反映</strong> させるコマンドです。<code>.bashrc</code> を編集しただけでは現在のターミナルには反映されません。<code>source</code> で「<strong>今すぐ読み直して!</strong>」と指示します。別名で <code>. ~/.bashrc</code>(ドット + スペース)とも書けます。</p>
+        </div>
+    </details>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+    <h2><span class="num">10</span>補足:<code>curl ... | bash</code> は何をしているのか</h2>
+    <p>このマニュアルでは2回出てきました:</p>
+    <pre data-lang="bash"><code>curl -fsSL https://claude.ai/install.sh | bash
+curl -fsSL https://agent-logs.chibatech.dev/install.sh | bash</code></pre>
+
+    <details class="m-note">
+        <summary>▶ 各オプションの意味 / 動作の流れ / 安全性</summary>
+        <div class="m-note-body">
+            <h4>各オプションの意味</h4>
+            <table class="req">
+                <tr><th>部分</th><th>意味</th></tr>
+                <tr><td><code>curl</code></td><td>URL からファイルをダウンロード</td></tr>
+                <tr><td><code>-f</code></td><td>サーバーがエラーを返したら失敗扱い</td></tr>
+                <tr><td><code>-s</code></td><td>進捗バーを非表示(silent)</td></tr>
+                <tr><td><code>-S</code></td><td>エラーは表示する</td></tr>
+                <tr><td><code>-L</code></td><td>リダイレクトを追跡</td></tr>
+                <tr><td><code>|</code></td><td>パイプ。左の出力を右の入力に渡す</td></tr>
+                <tr><td><code>bash</code></td><td>シェルスクリプトを実行</td></tr>
+            </table>
+            <h4>全体の動き</h4>
+            <ol>
+                <li><code>curl</code> がインストールスクリプト(<code>install.sh</code>)をダウンロード</li>
+                <li>その内容を <strong>保存せず</strong> にそのまま <code>bash</code> に渡す</li>
+                <li><code>bash</code> が受け取った内容を実行する</li>
+            </ol>
+            <p>つまり「<strong>ダウンロードして即実行</strong>」のワンライナーです。<strong>遠方の師匠から、必要な道具(ソフト)が箱で届く</strong> → 開封せずに中身をそのまま、書斎の組み立て係(<code>bash</code>)に渡す → その場で開けて組み立ててくれる、という流れ。</p>
+            <h4>安全性について</h4>
+            <p>このパターンは便利ですが、<strong>スクリプトの中身を読まずに実行している</strong> ので、配布元が信頼できない場合は危険です。実行前に確認したい場合:</p>
+            <pre data-lang="bash"><code># 一旦保存して中身を読む
+curl -fsSL https://agent-logs.chibatech.dev/install.sh -o install.sh
+less install.sh    # 中身を見る(qで終了)
+bash install.sh    # 確認したら実行</code></pre>
+            <p>agent-logs と Claude Code はどちらも <strong>公式配布元</strong> で、ソースコードも GitHub で公開されているので、そのまま実行しても安全です。</p>
+        </div>
+    </details>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+    <h2><span class="num">11</span>よくあるトラブルと対処</h2>
+
+    <details class="m-note">
+        <summary>▶ <code>wsl --install</code> で「仮想化が無効」と言われる</summary>
+        <div class="m-note-body">
+            <p>PCの BIOS/UEFI で <strong>仮想化(Intel VT-x / AMD-V)</strong> が無効になっています。PCメーカーごとの手順で BIOS に入り、<code>Virtualization Technology</code> を <code>Enabled</code> にしてください。書斎を増築したいのに、家の基礎工事の許可が下りていない状態。</p>
+        </div>
+    </details>
+
+    <details class="m-note">
+        <summary>▶ <code>claude: command not found</code></summary>
+        <div class="m-note-body">
+            <p>ターミナルを一度閉じて開き直すか、<code>source ~/.bashrc</code> を実行してください。それでもダメな場合はインストールが失敗しています。もう一度ステップ6-1を実行。備忘録(<code>.bashrc</code>)に新人(<code>claude</code>)の存在がまだ書き込まれていない状態。</p>
+        </div>
+    </details>
+
+    <details class="m-note">
+        <summary>▶ <code>agent-logs: command not found</code></summary>
+        <div class="m-note-body">
+            <p>同上。<code>source ~/.bashrc</code> を試してから、<code>agent-logs doctor</code> を実行。</p>
+        </div>
+    </details>
+
+    <details class="m-note">
+        <summary>▶ Antigravity でターミナルを開いても WSL になっていない</summary>
+        <div class="m-note-body">
+            <p>画面の左下を確認。<code>&gt;&lt; WSL: Ubuntu</code> が表示されていない場合、WSL に接続できていません。<code>Ctrl + Shift + P</code> → <code>Remote-WSL: Connect to WSL</code> をやり直してください。</p>
+            <p>ターミナルのプロンプトが <code>PS C:\...</code> になっている場合は、PowerShell が開いてしまっています。ターミナルパネル右上の <strong>「+」の隣の下向き矢印 ▼</strong> → <code>bash</code> または <code>Ubuntu</code> を選んでください。書斎(WSL)ではなく、家のリビング(PowerShell)で作業を始めてしまった状態。</p>
+        </div>
+    </details>
+
+    <details class="m-note">
+        <summary>▶ Antigravity が WSL に接続できない/重い</summary>
+        <div class="m-note-body">
+            <p>PowerShell(管理者)で WSL を再起動:</p>
+            <pre data-lang="powershell"><code>wsl --shutdown</code></pre>
+            <p>その後 Antigravity を再起動して、もう一度 <code>Remote-WSL: Connect to WSL</code> を試してください。</p>
+        </div>
+    </details>
+
+    <details class="m-note">
+        <summary>▶ Claude 起動時に同意フォーム署名を求められる</summary>
+        <div class="m-note-body">
+            <p>ブラウザで <a href="https://agent-logs.chibatech.dev/portal.html" target="_blank" rel="noopener">agent-logs.chibatech.dev/portal.html</a> を開き、署名を完了してください。<strong>署名しないと <code>claude</code> は起動できません。</strong></p>
+        </div>
+    </details>
+
+    <details class="m-note">
+        <summary>▶ Windows のファイルを編集したい</summary>
+        <div class="m-note-body">
+            <p>WSL からは <code>/mnt/c/Users/あなたの名前/</code> で C ドライブにアクセスできます。ただし、<strong>WSL のホーム(<code>~/projects/</code>)に置く方が動作が高速</strong> です。</p>
+            <pre data-lang="bash"><code>cd /mnt/c/Users/あなたの名前/Documents</code></pre>
+            <p>WSL のホームは「書斎の中の机の上」、<code>/mnt/c/...</code> は「家のリビングまで取りに行く」距離。書斎の中で作業した方が速い。</p>
+        </div>
+    </details>
+</section>
+
+<!-- 12 -->
+<section id="s12">
+    <h2><span class="num">12</span>アンインストール方法</h2>
+
+    <h3>agent-logs を削除</h3>
+    <pre data-lang="bash"><code>agent-logs uninstall
+source ~/.bashrc</code></pre>
+
+    <h3>Claude Code を削除</h3>
+    <pre data-lang="bash"><code>claude uninstall</code></pre>
+    <p>または <code>~/.local/bin/claude</code> を直接削除。</p>
+
+    <h3>WSL ごと削除</h3>
+    <pre data-lang="powershell"><code>wsl --unregister Ubuntu</code></pre>
+    <div class="warn">WSL を削除すると、<strong>書斎ごと取り壊す</strong> ことになります。中にあったすべて(プロジェクトファイル、設定、Claude のセッション履歴など)が消えます。重要な作業ファイルは事前に Windows 側または GitHub(=本棚)に退避してください。</div>
+</section>
+
+<section id="links">
+    <h2>参考リンク</h2>
+    <ul>
+        <li><strong>agent-logs(Chiba Tech / Henkaku Center)</strong>:<a href="https://agent-logs.chibatech.dev/" target="_blank" rel="noopener">agent-logs.chibatech.dev</a></li>
+        <li><strong>agent-logs ソースコード</strong>:<a href="https://github.com/henkaku-center/agent-logs" target="_blank" rel="noopener">github.com/henkaku-center/agent-logs</a></li>
+        <li><strong>Claude Code 公式ドキュメント</strong>:<a href="https://docs.claude.com/en/docs/claude-code/overview" target="_blank" rel="noopener">docs.claude.com</a></li>
+        <li><strong>同意フォーム ポータル</strong>:<a href="https://agent-logs.chibatech.dev/portal.html" target="_blank" rel="noopener">agent-logs.chibatech.dev/portal.html</a></li>
+    </ul>
+</section>
+
+<section class="closing">
+    <h2>おわりに ― 書斎が建ったあとに</h2>
+    <p>ここまでで、あなたは:</p>
+    <ul>
+        <li>家(Windows)の中に <strong>書斎(WSL + Ubuntu)</strong> を建てた</li>
+        <li>書斎の <strong>作業机(ターミナル)</strong> に座れるようになった</li>
+        <li>専属の <strong>共同作業者(Claude Code)</strong> を雇い入れた</li>
+        <li><strong>研究ノート(agent-logs)</strong> を引き出しに備え付けた</li>
+    </ul>
+    <p>これからの web3 概論の課題で、ここで建てた書斎を使って原稿(コード)を書いていきます。書いた原稿は、いずれ <strong>本棚(GitHub)</strong> に整理して納め、世に出すべきものは <strong>ショーケース(Vercel)</strong> に並べる ― そこまで一本の動線でつながっています。</p>
+    <p class="ending">呪文を覚えるのではなく、<strong>家を建てる</strong> 感覚で。</p>
+</section>
+
+<footer>
+    web3 概論 2026 · week03 · sushi yam
+</footer>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
