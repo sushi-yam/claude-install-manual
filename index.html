@@ -23,6 +23,7 @@
             <li><a href="#s5">ステップ3:Ubuntu 初期設定</a></li>
             <li><a href="#s6">ステップ4:Claude Code</a></li>
             <li><a href="#s7">ステップ5:agent-logs</a></li>
+            <li><a href="#s7-git">補足:Ubuntu に git を入れる</a></li>
             <li><a href="#s8">ステップ6:claude を起動</a></li>
             <li><a href="#s9">補足:bash と zsh</a></li>
             <li><a href="#s10">補足:curl | bash</a></li>
@@ -442,6 +443,77 @@ source ~/.zshrc</code></pre>
                 <li>シェルの設定ファイル(<code>~/.bashrc</code>)に必要な設定を追記</li>
             </ol>
             <p>研究ノートは、机の引き出しに常駐して、あなたと Claude の対話を記録します。ノートを「持つかどうか」「どのフォルダのログを共有するか」は、あなたが選べます(ステップ8で確認されます)。</p>
+        </div>
+    </details>
+</section>
+
+<!-- 7.5 補足:git -->
+<section id="s7-git">
+    <h2><span class="num">＋</span>補足:Ubuntu に git を入れる(claude 起動前のひと手間)</h2>
+    <p>Antigravity で AI と一緒にプログラムを作ったとき、すでに git を使った経験があるかもしれません。<strong>でも、その git は Ubuntu(WSL)からは使えません</strong>。Ubuntu 内に改めて git を入れる必要があります。</p>
+
+    <h3>Windows 側の git と、Ubuntu 側の git は別物</h3>
+    <table class="req">
+        <tr><th></th><th>Windows 側</th><th>Ubuntu(WSL)側</th></tr>
+        <tr><td>場所</td><td><code>C:\Program Files\Git\</code> など</td><td><code>/usr/bin/git</code></td></tr>
+        <tr><td>入った経緯</td><td>Antigravity / Git for Windows などと一緒に</td><td>あなたが <code>apt install</code> で入れる</td></tr>
+        <tr><td>設定(ユーザー名・メール)</td><td>Windows 側で設定済み</td><td><strong>Ubuntu 側で改めて設定が必要</strong></td></tr>
+        <tr><td>GitHub 認証情報</td><td>Windows 側に保存</td><td><strong>Ubuntu 側で改めて認証が必要</strong></td></tr>
+    </table>
+
+    <details class="m-note">
+        <summary>▶ 📖 例えで詳しく理解する</summary>
+        <div class="m-note-body">
+            <ul>
+                <li><strong>家(Windows)</strong> には大工道具一式(Git for Windows)が置いてある</li>
+                <li><strong>書斎(Ubuntu)</strong> は別の部屋で、別の道具棚がある</li>
+                <li>書斎で作業するには、<strong>書斎用の道具を別途運び込む</strong> 必要がある</li>
+                <li>共同作業者の Claude は <strong>「道具を使う人」</strong> であって <strong>「道具を仕入れる人」</strong> ではない</li>
+            </ul>
+            <p>家の道具を書斎に持ち込むことはできません。同じ「git」という名前でも、書斎には書斎の git を別途用意します。</p>
+        </div>
+    </details>
+
+    <h3>claude 起動の前に入れておく</h3>
+    <p>Ubuntu のターミナルで:</p>
+    <pre data-lang="bash"><code>sudo apt install git -y</code></pre>
+    <p>数秒で終わります。続けてバージョン確認:</p>
+    <pre data-lang="bash"><code>git --version</code></pre>
+    <div class="ok"><strong>✅ 成功サイン</strong>:<code>git version 2.x.x</code> のように表示される。</div>
+
+    <h3>Ubuntu 側で git の初期設定</h3>
+    <p>git にあなたが誰かを教えます(コミットの著者として記録される情報)。</p>
+    <pre data-lang="bash"><code>git config --global user.name "あなたの名前"
+git config --global user.email "あなた@example.com"</code></pre>
+    <p class="hint">💡 Claude(共同作業者)を呼ぶ前に、机に git を備え付けて名札を貼っておく ― そういうイメージです。これをやっておくと、Claude を起動した瞬間から git を使った作業に入れます。</p>
+
+    <details class="m-note">
+        <summary>▶ 📖 「Claude が自動で入れてくれないの?」</summary>
+        <div class="m-note-body">
+            <p>Claude Code はシェルコマンドを実行できるので、起動後に「git 入れて」と頼めば、<code>sudo apt install git -y</code> を実行しようとします。<strong>ただし</strong>:</p>
+            <ul>
+                <li>Claude は <strong>勝手にコマンドを走らせない</strong> ― 毎回「これ実行していい?」と確認してくる</li>
+                <li><code>sudo</code> のパスワードは <strong>Ubuntu が直接あなたに聞いてくる</strong>(Claude じゃない)ので、結局あなたが入力する必要がある</li>
+            </ul>
+            <p>つまり「コマンドを打つ手間」だけは省けるけど、確認とパスワード入力は残ります。<strong>起動前に自分で <code>sudo apt install git -y</code> を打っておく方が、結果的にスムーズ</strong>です。</p>
+            <p>例えで言うと:</p>
+            <ul>
+                <li><strong>「この道具が要りますよ」と気づく</strong> ✅(Claude にできる)</li>
+                <li><strong>「取りに行ってもいいですか?」と聞く</strong> ✅(Claude にできる)</li>
+                <li><strong>管理人(sudo)の印鑑を出す</strong> ❌(あなたの仕事)</li>
+                <li><strong>勝手に管理人室に侵入して道具を持ち出す</strong> ❌(できないし、しない)</li>
+            </ul>
+        </div>
+    </details>
+
+    <details class="m-note">
+        <summary>▶ 📖 GitHub 認証も Ubuntu 側で別に必要</summary>
+        <div class="m-note-body">
+            <p>Windows の Antigravity 側で GitHub 認証していても、<strong>Ubuntu 側では未認証</strong> です。Ubuntu で <code>git push</code> するときに、改めて認証が必要になります。家の鍵と書斎の鍵は別 ― そういう関係です。</p>
+            <p>一番ラクな方法は <strong>GitHub CLI(<code>gh</code>)</strong> を使うこと:</p>
+            <pre data-lang="bash"><code>sudo apt install gh -y
+gh auth login</code></pre>
+            <p>ブラウザが開いて、画面の指示通り進めれば認証完了。以降 <code>git push</code> でパスワードを聞かれることはなくなります。</p>
         </div>
     </details>
 </section>

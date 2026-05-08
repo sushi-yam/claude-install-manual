@@ -50,7 +50,8 @@ Windows という **家** の中に、Linux という **書斎** を増築し、
 5. [ステップ3:Ubuntu の初期設定](#5-ステップ3ubuntu-の初期設定)
 6. [ステップ4:Claude Code をインストールする](#6-ステップ4claude-code-をインストールする)
 7. [ステップ5:agent-logs をインストールする](#7-ステップ5agent-logs-をインストールする)
-8. [ステップ6:claude を起動する](#8-ステップ6claude-を起動する認証--同意--claude本体ログイン)
+8. [補足:Ubuntu に git を入れる(claude 起動前のひと手間)](#補足ubuntu-に-git-を入れるclaude-起動前のひと手間)
+9. [ステップ6:claude を起動する](#8-ステップ6claude-を起動する認証--同意--claude本体ログイン)
 9. [補足:bash と zsh について](#9-補足bash-と-zsh-について)
 10. [補足:`curl ... | bash` は何をしているのか](#10-補足curl---bash-は何をしているのか)
 11. [よくあるトラブルと対処](#11-よくあるトラブルと対処)
@@ -550,6 +551,96 @@ source ~/.zshrc
 4. シェルの設定ファイル(`~/.bashrc`)に必要な設定を追記
 
 研究ノートは、机の引き出しに常駐して、あなたと Claude の対話を記録します。ノートを「持つかどうか」「どのフォルダのログを共有するか」は、あなたが選べます(次のステップ8で確認されます)。
+
+</details>
+
+---
+
+## 補足:Ubuntu に git を入れる(claude 起動前のひと手間)
+
+Antigravity で AI と一緒にプログラムを作ったとき、すでに git を使った経験があるかもしれません。**でも、その git は Ubuntu(WSL)からは使えません**。Ubuntu 内に改めて git を入れる必要があります。
+
+### Windows 側の git と、Ubuntu 側の git は別物
+
+| | Windows 側 | Ubuntu(WSL)側 |
+|---|---|---|
+| 場所 | `C:\Program Files\Git\` など | `/usr/bin/git` |
+| 入った経緯 | Antigravity / Git for Windows などと一緒に | あなたが `apt install` で入れる |
+| 設定(ユーザー名・メール) | Windows 側で設定済み | **Ubuntu 側で改めて設定が必要** |
+| GitHub 認証情報 | Windows 側に保存 | **Ubuntu 側で改めて認証が必要** |
+
+<details>
+<summary>▶ 📖 例えで詳しく理解する</summary>
+
+- **家(Windows)** には大工道具一式(Git for Windows)が置いてある
+- **書斎(Ubuntu)** は別の部屋で、別の道具棚がある
+- 書斎で作業するには、**書斎用の道具を別途運び込む** 必要がある
+- 共同作業者の Claude は **「道具を使う人」** であって **「道具を仕入れる人」** ではない
+
+家の道具を書斎に持ち込むことはできません。同じ「git」という名前でも、書斎には書斎の git を別途用意します。
+
+</details>
+
+### claude 起動の前に入れておく
+
+Ubuntu のターミナルで:
+
+```bash
+sudo apt install git -y
+```
+
+数秒で終わります。続けてバージョン確認:
+
+```bash
+git --version
+```
+
+✅ **成功サイン**:`git version 2.x.x` のように表示される。
+
+### Ubuntu 側で git の初期設定
+
+git にあなたが誰かを教えます(コミットの著者として記録される情報)。
+
+```bash
+git config --global user.name "あなたの名前"
+git config --global user.email "あなた@example.com"
+```
+
+> 💡 Claude(共同作業者)を呼ぶ前に、机に git を備え付けて名札を貼っておく ― そういうイメージです。これをやっておくと、Claude を起動した瞬間から git を使った作業に入れます。
+
+<details>
+<summary>▶ 📖 「Claude が自動で入れてくれないの?」</summary>
+
+Claude Code はシェルコマンドを実行できるので、起動後に「git 入れて」と頼めば、`sudo apt install git -y` を実行しようとします。**ただし**:
+
+- Claude は **勝手にコマンドを走らせない** ― 毎回「これ実行していい?」と確認してくる
+- `sudo` のパスワードは **Ubuntu が直接あなたに聞いてくる**(Claude じゃない)ので、結局あなたが入力する必要がある
+
+つまり「コマンドを打つ手間」だけは省けるけど、確認とパスワード入力は残ります。**起動前に自分で `sudo apt install git -y` を打っておく方が、結果的にスムーズ**です。
+
+例えで言うと:
+- **「この道具が要りますよ」と気づく** ✅(Claude にできる)
+- **「取りに行ってもいいですか?」と聞く** ✅(Claude にできる)
+- **管理人(sudo)の印鑑を出す** ❌(あなたの仕事)
+- **勝手に管理人室に侵入して道具を持ち出す** ❌(できないし、しない)
+
+</details>
+
+<details>
+<summary>▶ 📖 GitHub 認証も Ubuntu 側で別に必要</summary>
+
+Windows の Antigravity 側で GitHub 認証していても、**Ubuntu 側では未認証** です。Ubuntu で `git push` するときに、改めて認証が必要になります。
+
+家の鍵と書斎の鍵は別 ― そういう関係です。
+
+一番ラクな方法は **GitHub CLI(`gh`)** を使うこと:
+
+```bash
+sudo apt install gh -y
+gh auth login
+```
+
+ブラウザが開いて、画面の指示通り進めれば認証完了。以降 `git push` でパスワードを聞かれることはなくなります。
 
 </details>
 
