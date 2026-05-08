@@ -100,6 +100,28 @@
             <p>書斎の中で作業するときの「机」として、ここでは <strong>Antigravity</strong>(Google の AI エージェント型 IDE)を窓口に使います。</p>
         </div>
     </details>
+
+    <details class="m-note">
+        <summary>▶ WSL2 と Ubuntu はどう違うのか</summary>
+        <div class="m-note-body">
+            <p>「WSL2 と Ubuntu、両方インストールされるけど、これ何が違うの?」とよく聞かれます。書斎の例えで言うと:</p>
+            <ul>
+                <li><strong>WSL2</strong> = 書斎の <strong>「箱(構造体)」そのもの</strong>。Windows という家の中に増築された、Linux 仕様の独立した部屋。壁・床・天井・配線・水道といった「Linux が動くための器」。<strong>Microsoft</strong> がつくった。それ単体では中に何もない、ただの空間。</li>
+                <li><strong>Ubuntu</strong> = その書斎に入れる <strong>「内装」</strong>。床材、壁紙、家具、本棚 ― つまり中に住む人(あなた)が実際に触る部分。ターミナルの見た目、<code>apt</code> というソフト管理の仕組み、ディレクトリ構造のクセ、付属ツールたち。<strong>Canonical</strong> という会社がつくった。</li>
+            </ul>
+            <p>Ubuntu 以外にも内装はあります:Debian、Fedora、Arch …(=和風内装、北欧風、無印風 など)。</p>
+            <p><code>wsl --install</code> は、<strong>書斎を増築する工事(WSL2)</strong> と、<strong>標準の内装パック(Ubuntu)</strong> が同時に届くセット商品、というイメージです。だから1コマンドで両方入る。</p>
+            <table class="req">
+                <tr><th></th><th>WSL2</th><th>Ubuntu</th></tr>
+                <tr><td>役割</td><td>箱(構造体)</td><td>内装</td></tr>
+                <tr><td>つくった人</td><td>Microsoft</td><td>Canonical</td></tr>
+                <tr><td>触る場所</td><td>あまり意識しない</td><td>ターミナルで毎日触る</td></tr>
+                <tr><td>替えられる?</td><td>替えない(固定)</td><td>替えられる(<code>wsl --install -d Debian</code> で畳張り替え)</td></tr>
+                <tr><td>更新の仕方</td><td>Windows 経由(構造改修)</td><td><code>apt upgrade</code>(内装リフォーム)</td></tr>
+            </table>
+            <p>つまり、これから毎日触るのは <strong>内装(Ubuntu)</strong> のほう。<strong>箱(WSL2)</strong> は静かに下で家を支えている、と覚えておけば大丈夫です。</p>
+        </div>
+    </details>
 </section>
 
 <!-- 2 -->
@@ -131,9 +153,30 @@
 
     <h3>3-1. PowerShell を「管理者として」開く</h3>
     <ol>
-        <li><strong>Windowsキー</strong> を押す</li>
-        <li><code>powershell</code> と入力</li>
-        <li>「Windows PowerShell」を <strong>右クリック → 「管理者として実行」</strong></li>
+        <li><strong>Windowsキー</strong> を押す(または画面下のタスクバーの Windows ボタンをクリック)
+            <figure>
+                <img src="img/01-powershell-start-button.png" alt="タスクバー左下の Windows ボタンを矢印で示している">
+                <figcaption>① タスクバーの Windows ボタン</figcaption>
+            </figure>
+        </li>
+        <li>スタートメニューが開いたら、上の検索ボックスにフォーカスする
+            <figure>
+                <img src="img/02-powershell-search-box.png" alt="スタートメニュー上部の検索ボックスを矢印で示している">
+                <figcaption>② 検索ボックスに入力する場所</figcaption>
+            </figure>
+        </li>
+        <li><code>powershell</code> と入力すると、検索結果に <strong>Windows PowerShell</strong> が表示される
+            <figure>
+                <img src="img/03-powershell-search-result.png" alt="powershell と入力した検索結果に Windows PowerShell が表示されている">
+                <figcaption>③ <code>powershell</code> と入力すると Windows PowerShell が出る</figcaption>
+            </figure>
+        </li>
+        <li>「Windows PowerShell」を <strong>右クリック → 「Run as administrator(管理者として実行)」</strong>
+            <figure>
+                <img src="img/04-powershell-run-as-admin.png" alt="Windows PowerShell を右クリックして表示されたメニューから Run as administrator を選択している">
+                <figcaption>④ 右クリック → Run as administrator</figcaption>
+            </figure>
+        </li>
         <li>「変更を加えることを許可しますか?」→ <strong>「はい」</strong></li>
     </ol>
     <div class="ok"><strong>✅ 成功サイン</strong>:<code>PS C:\WINDOWS\system32&gt;</code> と表示されたウィンドウが開く。</div>
@@ -143,11 +186,23 @@
     <p>完了まで <strong>5〜10分</strong>。</p>
 
     <h3>3-3. パソコンを再起動する</h3>
-    <p>「再起動してください」と表示されたら <strong>必ず再起動</strong>。</p>
+    <p>「再起動してください」と表示されたら <strong>必ず再起動</strong> してください。再起動しないと WSL は使えません。</p>
 
-    <h3>3-4. 再起動完了</h3>
-    <p>再起動後、初回だけ Ubuntu のウィンドウが自動で立ち上がり、<code>Installing, this may take a few minutes...</code> と表示されます。数分待ちます。このウィンドウは閉じてもOK。</p>
+    <h3>3-4. 再起動後に出てくる Ubuntu ウィンドウについて</h3>
+    <p>再起動が終わると、初回だけ <strong>Ubuntu のウィンドウが自動で立ち上がり</strong>、以下の表示が出ます:</p>
+    <pre><code>Installing, this may take a few minutes...</code></pre>
+    <p>これは Ubuntu 内装の初期セットアップです。<strong>そのまま数分待ち、表示が落ち着いたらこのウィンドウは閉じてOK</strong> です(ユーザー名やパスワードを聞かれても、ここでは答えなくて構いません ― あとで Antigravity 経由のターミナルから設定します)。</p>
+    <div class="ok"><strong>✅ ステップ1のゴール</strong>:書斎(WSL2)の増築工事と、内装(Ubuntu)の搬入が完了した状態。</div>
     <div class="warn"><code>wsl --install</code> で「仮想化が無効」というエラーが出たら、<a href="#s11">ステップ11</a> を参照。</div>
+
+    <h3>3-5. 次にやること ― Antigravity を入れて、ターミナルを開く</h3>
+    <p>書斎は建ちましたが、まだ <strong>机(Antigravity)</strong> がありません。次のステップで:</p>
+    <ol>
+        <li><strong>Antigravity をインストール</strong> する(Ubuntu のターミナルを開く窓口になる)</li>
+        <li>Antigravity から <strong>WSL Ubuntu に接続</strong> する</li>
+        <li><strong>ターミナルを表示</strong> する</li>
+    </ol>
+    <div class="note">➡️ <a href="#s4"><strong>次のセクション</strong></a> へ進んでください。</div>
 
     <details class="m-note">
         <summary>▶ 例えで詳しく理解する</summary>
@@ -163,6 +218,11 @@
 <!-- 4 -->
 <section id="s4">
     <h2><span class="num">4</span>ステップ2:Ubuntu のターミナルを開く</h2>
+    <div class="note"><strong>📝 このステップで何をするか</strong><br>
+        ① <strong>Antigravity をインストール</strong>(机を運び込む)→
+        ② <strong>Antigravity を起動して WSL に接続</strong>(机を書斎モードに切り替える)→
+        ③ <strong>ターミナルを開く</strong>(机の上にメモ帳を出す)
+    </div>
 
     <h3>4-1. ターミナルとは?</h3>
     <p>コマンド(命令文)を打ち込んで OS を操作する <strong>黒い画面</strong> のことです。</p>
@@ -258,9 +318,10 @@ Retype new password:</code></pre>
     <p>→ パスワードを2回入力。<strong>入力中は何も表示されませんが、ちゃんと打てています。</strong></p>
 
     <h3>5-2. パッケージを最新にする</h3>
-    <p>プロンプト(<code>taro@DESKTOP-XXX:~$</code>)が出たら:</p>
-    <pre data-lang="bash"><code>sudo apt update && sudo apt upgrade -y</code></pre>
-    <p>最初に <strong>パスワードを聞かれます</strong>(さっき設定したもの)。これも入力中は表示されません。完了まで <strong>2〜5分</strong>。</p>
+    <p>プロンプト(<code>taro@DESKTOP-XXX:~$</code>)が出たら、以下を <strong>1行ずつ</strong> 実行します:</p>
+    <pre data-lang="bash"><code>sudo apt update</code></pre>
+    <pre data-lang="bash"><code>sudo apt upgrade -y linux-generic</code></pre>
+    <p>最初の <code>sudo</code> 実行時に <strong>パスワードを聞かれます</strong>(さっき設定したもの)。これも入力中は表示されません。完了まで <strong>2〜5分</strong>。</p>
     <div class="ok"><strong>✅ 成功サイン</strong>:エラーなくプロンプトに戻る。</div>
 
     <details class="m-note">
@@ -268,11 +329,11 @@ Retype new password:</code></pre>
         <div class="m-note-body">
             <p><strong>このステップでやること</strong>:書斎の住人としての <strong>自分の名前と鍵</strong> を登録し、内装を最新に整える。</p>
             <p>このパスワードは、家の管理者の <strong>印鑑(sudo)</strong> の暗証番号です。書斎の重要な工事(管理者権限が必要なコマンド)をするときに、毎回これで本人確認します。</p>
-            <p><code>sudo apt update && sudo apt upgrade -y</code> の意味:</p>
+            <p>2つのコマンドの意味:</p>
             <ul>
                 <li><code>sudo</code> … 管理者権限で実行する命令(=印鑑を押す)</li>
                 <li><code>apt update</code> … インストール可能なソフトのリストを更新(=書店の最新カタログを取り寄せる)</li>
-                <li><code>apt upgrade -y</code> … 既存ソフトを最新版にアップグレード(<code>-y</code> は「全部はい」)</li>
+                <li><code>apt upgrade -y linux-generic</code> … <code>linux-generic</code>(Ubuntu の中核パッケージ)を最新版にアップグレード(<code>-y</code> は「全部はい」)</li>
             </ul>
         </div>
     </details>
@@ -312,13 +373,62 @@ Retype new password:</code></pre>
 
     <h3>7-1. インストールコマンド</h3>
     <pre data-lang="bash"><code>curl -fsSL https://agent-logs.chibatech.dev/install.sh | bash</code></pre>
+    <div class="ok"><strong>✅ 以下のような出力が出れば、インストール完了</strong> です(ユーザー名やバージョン番号は環境によって変わります)。</div>
+    <pre data-lang="output"><code>→ Detected platform: linux-x64
+→ Fetching latest release...
+→ Downloading agent-logs v0.3.6 for linux-x64...
+✓ Checksum verified
+✓ Installed to /home/taro/.local/bin/agent-logs
+✓ Wrapper installed in /home/taro/.bashrc
+
+✓ Installation complete. Open a new terminal, then run:
+
+  claude
+
+  Or reload your current shell:
+
+  source /home/taro/.bashrc</code></pre>
+    <p>→ 出力末尾の <code>source ...</code> を、次のステップで実行します。</p>
+
+    <div class="note"><strong>💡 <code>.bashrc</code> か <code>.zshrc</code> か、出力をよく見てください</strong><br>
+        シェル(後述)の種類によって、最後の行は変わります:
+        <ul style="margin: 0.5rem 0 0 0;">
+            <li><strong>bash</strong> の人(WSL Ubuntu のデフォルト):<code>source /home/あなた/.bashrc</code></li>
+            <li><strong>zsh</strong> の人(macOS デフォルト、または zsh に切り替えた人):<code>source /home/あなた/.zshrc</code></li>
+        </ul>
+        どちらが表示されたかは、あなたのインストール出力を確認してください。<strong>そこに表示されたコマンドを、そのまま次のステップで実行します</strong>。
+    </div>
+
+    <details class="m-note">
+        <summary>▶ bash と zsh ってなに?(例えで理解する)</summary>
+        <div class="m-note-body">
+            <p>ターミナルに打ったコマンドを解釈して OS に伝えるプログラムを <strong>シェル</strong> と呼びます。「ターミナル(画面)」と「シェル(中身)」は別物です。</p>
+            <p>例えで言うと:</p>
+            <ul>
+                <li><strong>ターミナル</strong> = 書斎の <strong>机そのもの</strong>(物理的な作業場所)</li>
+                <li><strong>シェル</strong> = その机での <strong>作業ルール / 方言</strong>(同じ机でも、人によって作法が違う)</li>
+            </ul>
+            <p>bash と zsh は、いわば <strong>方言違いの2人の助手</strong> です。やってくれることは大体同じですが、話し方(コマンドの細かい挙動)とノートの置き場所が少し違います。</p>
+            <table class="req">
+                <tr><th></th><th>bash</th><th>zsh</th></tr>
+                <tr><td>正式名</td><td>Bourne Again SHell</td><td>Z Shell</td></tr>
+                <tr><td>WSL Ubuntu のデフォルト</td><td>✅</td><td></td></tr>
+                <tr><td>macOS のデフォルト(2019年以降)</td><td></td><td>✅</td></tr>
+                <tr><td>設定ファイル(備忘録)</td><td><code>~/.bashrc</code></td><td><code>~/.zshrc</code></td></tr>
+                <tr><td>性格</td><td>標準的・素朴・互換性が高い</td><td>補完が強力・テーマ豊富・少しモダン</td></tr>
+            </table>
+            <p>それぞれが <strong>自分専用の備忘録</strong> を持っています:bash は <code>~/.bashrc</code>、zsh は <code>~/.zshrc</code>。これは「<strong>毎朝、机に座る前に開く申し送りメモ</strong>」のようなもので、「今日から <code>claude</code> という新人さんも仲間ね」「<code>agent-logs</code> の道具はこの引き出しにあるよ」といった情報が書かれています。</p>
+            <p>agent-logs のインストーラーは、あなたが今 <strong>どちらの助手と一緒に働いているか</strong> を自動で判別して、適切な備忘録(<code>.bashrc</code> か <code>.zshrc</code>)に追記してくれます。だから出力の最後に表示される <code>source ...</code> も、その助手のものになる ― という仕組みです。</p>
+            <p><code>source</code> の意味は、「<strong>今すぐ備忘録を読み直して!</strong>」という指示。<code>.bashrc</code>(または <code>.zshrc</code>)を編集しただけでは、いま開いているターミナルには反映されません。<code>source</code> で即座に読み直してもらいます。</p>
+        </div>
+    </details>
 
     <h3>7-2. シェル設定を反映</h3>
-    <pre data-lang="bash"><code>source ~/.bashrc</code></pre>
-
-    <h3>7-3. インストール確認</h3>
-    <pre data-lang="bash"><code>agent-logs doctor</code></pre>
-    <div class="ok"><strong>✅ 成功サイン</strong>:設定や接続の状態が表示される。</div>
+    <p>7-1 のインストール出力の <strong>最後の行に表示されたコマンド</strong> を、そのままコピペして実行します。</p>
+    <pre data-lang="bash"><code># bash の人(WSL Ubuntu のデフォルト)
+source ~/.bashrc</code></pre>
+    <pre data-lang="bash"><code># zsh の人(macOS や zsh に切り替えた人)
+source ~/.zshrc</code></pre>
 
     <details class="m-note">
         <summary>▶ 例えで詳しく理解する</summary>
@@ -367,15 +477,28 @@ cd ~/projects/my-first-project</code></pre>
     <pre data-lang="bash"><code>claude</code></pre>
 
     <h3>8-3. ① メール認証(agent-logs)</h3>
+
+    <h4>初回:メールアドレスを登録する</h4>
+    <p>最初に <strong>メールアドレスを聞かれます</strong>。Claude アカウントに登録しているメールアドレスを入力してください。</p>
+    <pre><code>────────────────────────────────────────────────────
+Agent Logging Authentication
+
+Enter your email address: ▮</code></pre>
+    <p>入力 → Enter すると、そのメールに <strong>6桁の確認コード</strong> が送られます。</p>
+
+    <h4>2回目以降:登録済みのメールにコードが届く</h4>
+    <p>メールが既に登録されている場合は、いきなりこの画面が出ます:</p>
     <pre><code>────────────────────────────────────────────────────
 Agent Logging Authentication
 
 Verification code sent to あなた@example.com
 Enter the 6-digit code from your email: ▮</code></pre>
     <ol>
-        <li>Claude アカウントのメールに届いた <strong>6桁のコード</strong> を確認</li>
+        <li>メールを開いて <strong>6桁のコード</strong> を確認</li>
         <li>ターミナルに入力 → Enter</li>
     </ol>
+
+    <p class="hint">💡 メールアドレスは事前に設定するものではなく、<strong>初回 <code>claude</code> 実行時にその場で対話的に聞かれて入力する</strong> 仕組みです。認証情報は <code>~/.config/agent-logs/token.json</code> に保存され、90日で失効します(失効したらまたメール認証から)。</p>
 
     <h3>8-4. ② 同意フォームに署名(初回のみ)</h3>
     <pre><code>────────────────────────────────────────────────────
@@ -401,7 +524,32 @@ Visit the portal to read and sign:
         <li><strong>矢印キー(↑↓)</strong> で選択</li>
         <li><strong>Enter</strong> で決定</li>
     </ul>
-    <p>この選択は <strong>フォルダ毎に1回だけ</strong> 聞かれます。</p>
+
+    <h4>Yes と No の違い</h4>
+    <table class="req">
+        <tr><th>選択</th><th>このフォルダで Claude を使うと…</th><th>向いてる場面</th></tr>
+        <tr><td><strong>1. Yes, share this folder</strong></td><td>このフォルダの <strong>対話ログ(あなたのプロンプト + Claude の返答)</strong> が、研究プログラムに自動で共有される</td><td>課題用フォルダ、研究プログラムに参加するフォルダ</td></tr>
+        <tr><td><strong>2. No, don't share</strong></td><td>共有されない。Claude は普通に使えるが、ログは送られない</td><td>個人的なプロジェクト、機密を扱うフォルダ</td></tr>
+    </table>
+    <p class="hint">💡 この選択は <strong>フォルダ毎に1回だけ</strong> 聞かれて、以降は記憶されます。「課題フォルダは Yes、個人プロジェクトは No」のようにフォルダ単位で使い分けられます。</p>
+
+    <h4>共有される/されないもの(Yes を選んだ場合)</h4>
+    <table class="req">
+        <tr><th>共有される</th><th>共有されない</th></tr>
+        <tr><td>あなたのプロンプト</td><td>ファイルの中身(<code>tool_result</code> の中身は除去)</td></tr>
+        <tr><td>Claude の返答</td><td>ファイル全体のスナップショット</td></tr>
+        <tr><td>ツール呼び出しの「名前」</td><td>添付ファイル</td></tr>
+    </table>
+    <p>ファイルの <strong>中身は送られない</strong> のがポイント。送られるのはあくまで「あなたと Claude の会話そのもの」だけです。</p>
+
+    <h4>どっちを選べばいい?</h4>
+    <ul>
+        <li><strong>web3 概論の課題で使うフォルダ → <code>Yes</code> を推奨</strong><br>
+        Chiba Tech / Henkaku Center のリサーチプログラム参加者として、研究ノートに記録を残す ― これがそもそもの参加目的です。共有されるのは会話部分だけで、ファイルの中身は送られないので、安心して <code>Yes</code> でOK。</li>
+        <li><strong>後で個人プロジェクトを作るとき → そのときに <code>No</code> を選べばよい</strong><br>
+        この選択はフォルダ毎なので、課題フォルダは Yes のまま、新しい個人フォルダで <code>claude</code> を起動したときに改めて <code>No</code> を選べます。</li>
+    </ul>
+    <div class="note">🏛️ <strong>例えで言うと</strong>:研究ノート(agent-logs)に「このフォルダでの作業を記録するか?」と聞かれている。研究プログラムの一環で書いている原稿は記録する(Yes)、私的な日記は記録しない(No) ― そういうフォルダ単位の使い分けができる、ということです。</div>
 
     <h3>8-6. ④ Anthropic アカウントでログイン(Claude Code 初回のみ)</h3>
     <p>agent-logs のチェックを通過すると、ブラウザで Anthropic のログイン画面が開きます。</p>
@@ -416,13 +564,6 @@ Visit the portal to read and sign:
     <pre><code>&gt; hello</code></pre>
     <div class="ok"><strong>✅ 成功サイン</strong>:Claude が応答する。<strong>おめでとうございます。書斎の建設は完了です。</strong></div>
 
-    <h3>8-8. 共有される/されないもの</h3>
-    <table class="req">
-        <tr><th>共有される</th><th>共有されない</th></tr>
-        <tr><td>あなたのプロンプト</td><td>ファイルの中身(<code>tool_result</code> の中身は除去される)</td></tr>
-        <tr><td>Claude の返答</td><td>ファイル全体のスナップショット</td></tr>
-        <tr><td>ツール呼び出しの「名前」</td><td>添付ファイル</td></tr>
-    </table>
     <p class="hint"><strong>2回目以降</strong>の <code>claude</code> 実行では、メール認証も OAuth も省略され、共有可否も新しいフォルダのときだけ聞かれます。普通に <code>claude</code> を打つだけで起動します。</p>
 
     <details class="m-note">
@@ -523,7 +664,7 @@ bash install.sh    # 確認したら実行</code></pre>
     <details class="m-note">
         <summary>▶ <code>agent-logs: command not found</code></summary>
         <div class="m-note-body">
-            <p>同上。<code>source ~/.bashrc</code> を試してから、<code>agent-logs doctor</code> を実行。</p>
+            <p>同上。ターミナルを開き直すか、<code>source ~/.bashrc</code> を試してください。</p>
         </div>
     </details>
 

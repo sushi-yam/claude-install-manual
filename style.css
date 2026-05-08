@@ -502,6 +502,31 @@ footer {
     text-transform: lowercase;
 }
 
+/* ───────── figure / screenshot ───────── */
+figure {
+    margin: 1.5rem auto;
+    padding: 0.75rem;
+    max-width: 520px;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+}
+figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 2px;
+}
+figure figcaption {
+    margin-top: 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.02em;
+}
+
 /* ───────── mobile ───────── */
 @media (max-width: 600px) {
     body { font-size: 15px; }
@@ -515,4 +540,6 @@ footer {
     pre { font-size: 0.78rem; padding: 1rem; padding-right: 4rem; }
     .req, .metaphor-table { font-size: 0.82rem; }
     .req th, .metaphor-table th, .req td, .metaphor-table td { padding: 0.5rem; }
+    figure { padding: 0.5rem; }
+    figure figcaption { font-size: 0.72rem; }
 }
