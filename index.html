@@ -573,18 +573,42 @@ Enter the 6-digit code from your email: ▮</code></pre>
     <p class="hint">💡 メールアドレスは事前に設定するものではなく、<strong>初回 <code>claude</code> 実行時にその場で対話的に聞かれて入力する</strong> 仕組みです。認証情報は <code>~/.config/agent-logs/token.json</code> に保存され、90日で失効します(失効したらまたメール認証から)。</p>
 
     <h3>8-4. ② 同意フォームに署名(初回のみ)</h3>
+    <p>メール認証に成功すると、まだ同意フォームに署名していなければ次のメッセージが出ます:</p>
     <pre><code>────────────────────────────────────────────────────
 Agent Logs — Consent Required
 
 You must sign the informed consent form before using Claude.
 Visit the portal to read and sign:
 
-    https://agent-logs.chibatech.dev/portal.html</code></pre>
+    https://agent-logs.chibatech.dev/portal.html
+
+Logged in as tanaka@chibatech.ac.jp</code></pre>
+    <p class="hint">💡 末尾の <code>Logged in as ...</code> には、8-3 で入力したあなたのメールアドレスが表示されます。<strong>このメールでポータルにログインして署名する必要があります</strong>(別のメールでログインしても紐付きません)。</p>
+
+    <h4>署名の手順</h4>
     <ol>
         <li>ブラウザで <a href="https://agent-logs.chibatech.dev/portal.html" target="_blank" rel="noopener">agent-logs.chibatech.dev/portal.html</a> を開く</li>
+        <li>ターミナルに表示された <strong>同じメールアドレス</strong> でポータルにログイン</li>
         <li><strong>インフォームド・コンセント(研究同意書)</strong> を読んで署名</li>
-        <li>ターミナルに戻って <strong>もう一度 <code>claude</code></strong> を実行</li>
+        <li>ターミナルに戻って <strong>もう一度 <code>claude</code></strong> を実行(または案内に従って続行)</li>
     </ol>
+
+    <div class="note">
+        📝 <strong>同意フォームの中身</strong>:このフォームは、あなたのセッションログがどう使われるかを説明する書類です。
+        <ul>
+            <li><strong>教育評価のため</strong>(必須):授業や課題のために使われる</li>
+            <li><strong>研究のため</strong>(任意):オン/オフを選べる ― 研究プログラムでの分析にも使われるかどうか</li>
+        </ul>
+        いずれにせよ、<strong>ファイルの中身は送られず、対話の会話部分のみ</strong> が共有されます(8-5 の表を参照)。
+    </div>
+
+    <details class="m-note">
+        <summary>▶ 📖 なぜ署名が必要なのか</summary>
+        <div class="m-note-body">
+            <p>agent-logs はあなたと Claude の対話を <strong>研究プログラムに共有</strong> する仕組みです。共有が始まる前に、「何が共有されて、どう使われるか」をあなた自身が理解して同意した、という記録を残す必要があります。これが <strong>インフォームド・コンセント(informed consent / 説明と同意)</strong> です。</p>
+            <p>書斎の例えで言うと:<strong>研究ノート(agent-logs)</strong> に対して「このノートに作業内容を書き留めて、研究室に提出することに同意します」というサインを最初に1回だけする ― そういうイメージです。署名は1回で済み、以降は毎回聞かれません。</p>
+        </div>
+    </details>
 
     <h3>8-5. ③ このフォルダの共有可否を選ぶ</h3>
     <pre><code>Share session logs for this workspace?
