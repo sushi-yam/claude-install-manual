@@ -23,12 +23,12 @@
             <li><a href="#s5">ステップ3:Ubuntu 初期設定</a></li>
             <li><a href="#s6">ステップ4:Claude Code</a></li>
             <li><a href="#s7">ステップ5:agent-logs</a></li>
-            <li><a href="#s7-git">補足:Ubuntu に git を入れる</a></li>
-            <li><a href="#s8">ステップ6:claude を起動</a></li>
-            <li><a href="#s9">補足:bash と zsh</a></li>
-            <li><a href="#s10">補足:curl | bash</a></li>
-            <li><a href="#s11">トラブル対処</a></li>
-            <li><a href="#s12">アンインストール</a></li>
+            <li><a href="#s8">補足:Ubuntu に git を入れる</a></li>
+            <li><a href="#s9">ステップ6:claude を起動</a></li>
+            <li><a href="#s10">補足:bash と zsh</a></li>
+            <li><a href="#s11">補足:curl | bash</a></li>
+            <li><a href="#s12">トラブル対処</a></li>
+            <li><a href="#s13">アンインストール</a></li>
         </ol>
     </div>
 </aside>
@@ -99,6 +99,11 @@
             <p>Claude Code は Linux / macOS 用に作られているので、Windows ではそのままでは動きません。Windows は和室の家、Claude は洋室で生まれた住人。直接は同居できないので、<strong>家の中に「Linux 仕様の書斎」を増築</strong> して、そこに住んでもらう、というイメージです。</p>
             <p>その「書斎」を作る仕組みが <strong>WSL(Windows Subsystem for Linux)</strong> です。書斎の内装には Linux の中でも一番ポピュラーな <strong>Ubuntu</strong> を使います。</p>
             <p>書斎の中で作業するときの「机」として、ここでは <strong>Antigravity</strong>(Google の AI エージェント型 IDE)を窓口に使います。</p>
+            <div class="note">
+                <p><strong>📖 IDE(Integrated Development Environment / 統合開発環境)とは</strong></p>
+                <p>ひとことで言うと、<strong>原稿用紙・道具箱・本棚をひとつの机にまとめた「多機能デスク」</strong>。原稿を書く(コードを書く)・道具を並べる(ターミナルでコマンドを打つ)・本棚を覗く(ファイルを開く)を、座ったまま全部できる作業机のことです。</p>
+                <p>Antigravity はその机に <strong>AI助手</strong> が常駐しているタイプ ― つまり「AI助手つきの執筆机ツール」です。</p>
+            </div>
         </div>
     </details>
 
@@ -194,7 +199,7 @@
     <pre><code>Installing, this may take a few minutes...</code></pre>
     <p>これは Ubuntu 内装の初期セットアップです。<strong>そのまま数分待ち、表示が落ち着いたらこのウィンドウは閉じてOK</strong> です(ユーザー名やパスワードを聞かれても、ここでは答えなくて構いません ― あとで Antigravity 経由のターミナルから設定します)。</p>
     <div class="ok"><strong>✅ ステップ1のゴール</strong>:書斎(WSL2)の増築工事と、内装(Ubuntu)の搬入が完了した状態。</div>
-    <div class="warn"><code>wsl --install</code> で「仮想化が無効」というエラーが出たら、<a href="#s11">ステップ11</a> を参照。</div>
+    <div class="warn"><code>wsl --install</code> で「仮想化が無効」というエラーが出たら、<a href="#s12">12. よくあるトラブルと対処</a> を参照。</div>
 
     <h3>3-5. 次にやること ― Antigravity を入れて、ターミナルを開く</h3>
     <p>書斎は建ちましたが、まだ <strong>机(Antigravity)</strong> がありません。次のステップで:</p>
@@ -233,7 +238,7 @@
         <summary>▶ 例えで詳しく理解する</summary>
         <div class="m-note-body">
             <p>普段の Windows はマウスでアイコンをクリックして操作しますが、Linux(Ubuntu)では <strong>キーボードで命令を打ち込んで</strong> 操作します。</p>
-            <p>プロンプトは、書斎の机の上に置かれた「ご注文をどうぞ」のメモ帳。あなたが書き込んだ一行を、書斎の住人(Linux)が読み上げて実行してくれます。</p>
+            <p>プロンプトは、書斎の机の上に置かれた「ご注文をどうぞ」のメモ帳。あなたが書き込んだ一行を、<strong>机の助手</strong>(シェル ― bash や zsh)が読み上げて実行してくれます。</p>
         </div>
     </details>
 
@@ -243,7 +248,7 @@
     <details class="m-note">
         <summary>▶ 例えで詳しく理解する</summary>
         <div class="m-note-body">
-            <p>Antigravity は Google の AI エージェント型 IDE で、Ubuntu のターミナルとコードエディタを <strong>1つの画面で同時に使える</strong> ので、Claude Code と相性がいいです。書斎の机の上に「<strong>原稿用紙(エディタ)</strong>」と「<strong>メモ帳(ターミナル)</strong>」を並べて置いてくれる、AI助手つきの作業ツール、というイメージです。</p>
+            <p>Antigravity は Google の AI エージェント型 IDE(原稿用紙・道具箱・本棚を 1 つにまとめた多機能デスク)で、Ubuntu のターミナルとコードエディタを <strong>1つの画面で同時に使える</strong> ので、Claude Code と相性がいいです。書斎の机の上に「<strong>原稿用紙(エディタ)</strong>」と「<strong>メモ帳(ターミナル)</strong>」を並べて置いてくれる、AI助手つきの作業ツール、というイメージです。</p>
         </div>
     </details>
 
@@ -354,14 +359,14 @@ Retype new password:</code></pre>
     <pre data-lang="bash"><code>claude --version</code></pre>
     <div class="ok"><strong>✅ 成功サイン</strong>:バージョン番号(例:<code>2.1.126</code>)が表示される。</div>
 
-    <div class="warn"><strong>重要</strong>:ここではまだ <code>claude</code> コマンド本体は実行しません。 agent-logs(次のステップ)を入れる前に <code>claude</code> を起動すると、agent-logs のラッパー(同意確認の仕組み)を通らずに Claude が起動してしまうためです。Anthropic アカウントへのログインは、ステップ8で agent-logs が立ち上がった後に自動で促されます。</div>
+    <div class="warn"><strong>重要</strong>:ここではまだ <code>claude</code> コマンド本体は実行しません。 agent-logs(次のステップ)を入れる前に <code>claude</code> を起動すると、agent-logs のラッパー(同意確認の仕組み)を通らずに Claude が起動してしまうためです。Anthropic アカウントへのログインは、ステップ6(<code>claude</code> を起動する)で agent-logs が立ち上がった後に自動で促されます。</div>
 
     <details class="m-note">
         <summary>▶ 例えで詳しく理解する</summary>
         <div class="m-note-body">
             <p><strong>このステップでやること</strong>:書斎に <strong>専属の共同作業者(Claude Code)</strong> を雇い入れる。</p>
-            <p><code>curl -fsSL ... | bash</code> というワンライナーは、<strong>遠方の師匠が直送する道具一式を、その場で開封して書斎に組み立てる</strong> 一連の作業を、一行に圧縮したものです。詳しい仕組みは <a href="#s10">10章</a> を参照。</p>
-            <p><code>~/.bashrc</code> は、<strong>机に座る前に毎朝開く備忘録</strong>(「今日からこの新人さんも仲間ね」と書かれた紙)です。<code>source</code> は「<strong>今すぐその備忘録を読み直して!</strong>」という指示です。詳しくは <a href="#s9">9章</a> を参照。</p>
+            <p><code>curl -fsSL ... | bash</code> というワンライナーは、<strong>遠方の師匠が直送する道具一式を、その場で開封して書斎に組み立てる</strong> 一連の作業を、一行に圧縮したものです。詳しい仕組みは <a href="#s11">11章</a> を参照。</p>
+            <p><code>~/.bashrc</code> は、<strong>机に座る前に毎朝開く備忘録</strong>(「今日からこの新人さんも仲間ね」と書かれた紙)です。<code>source</code> は「<strong>今すぐその備忘録を読み直して!</strong>」という指示です。詳しくは <a href="#s10">10章</a> を参照。</p>
         </div>
     </details>
 </section>
@@ -441,14 +446,14 @@ source ~/.zshrc</code></pre>
                 <li><code>claude</code> コマンドを <strong>同意確認ラッパーで包む</strong></li>
                 <li>シェルの設定ファイル(<code>~/.bashrc</code>)に必要な設定を追記</li>
             </ol>
-            <p>研究ノートは、机の引き出しに常駐して、あなたと Claude の対話を記録します。ノートを「持つかどうか」「どのフォルダのログを共有するか」は、あなたが選べます(ステップ8で確認されます)。</p>
+            <p>研究ノートは、机の引き出しに常駐して、あなたと Claude の対話を記録します。ノートを「持つかどうか」「どのフォルダのログを共有するか」は、あなたが選べます(次のステップ6 ― <code>claude</code> を起動するときに確認されます)。</p>
         </div>
     </details>
 </section>
 
-<!-- 7.5 補足:git -->
-<section id="s7-git">
-    <h2><span class="num">＋</span>補足:Ubuntu に git を入れる(claude 起動前のひと手間)</h2>
+<!-- 8 補足:git -->
+<section id="s8">
+    <h2><span class="num">8</span>補足:Ubuntu に git を入れる(claude 起動前のひと手間)</h2>
     <p>Antigravity で AI と一緒にプログラムを作ったとき、すでに git を使った経験があるかもしれません。<strong>でも、その git は Ubuntu(WSL)からは使えません</strong>。Ubuntu 内に改めて git を入れる必要があります。</p>
 
     <h3>Windows 側の git と、Ubuntu 側の git は別物</h3>
@@ -517,9 +522,9 @@ gh auth login</code></pre>
     </details>
 </section>
 
-<!-- 8 -->
-<section id="s8">
-    <h2><span class="num">8</span>ステップ6:claude を起動する</h2>
+<!-- 9 -->
+<section id="s9">
+    <h2><span class="num">9</span>ステップ6:claude を起動する</h2>
     <p>ここで初めて <code>claude</code> コマンドを実行します。実行すると、以下が順番に発生します:</p>
     <pre><code>claude を実行
   ↓
@@ -673,9 +678,9 @@ Logged in as tanaka@chibatech.ac.jp</code></pre>
     </details>
 </section>
 
-<!-- 9 -->
-<section id="s9">
-    <h2><span class="num">9</span>補足:bash と zsh について</h2>
+<!-- 10 -->
+<section id="s10">
+    <h2><span class="num">10</span>補足:bash と zsh について</h2>
     <details class="m-note">
         <summary>▶ シェルとは何か / bash と zsh の違い / <code>~/.bashrc</code> とは</summary>
         <div class="m-note-body">
@@ -699,9 +704,9 @@ Logged in as tanaka@chibatech.ac.jp</code></pre>
     </details>
 </section>
 
-<!-- 10 -->
-<section id="s10">
-    <h2><span class="num">10</span>補足:<code>curl ... | bash</code> は何をしているのか</h2>
+<!-- 11 -->
+<section id="s11">
+    <h2><span class="num">11</span>補足:<code>curl ... | bash</code> は何をしているのか</h2>
     <p>このマニュアルでは2回出てきました:</p>
     <pre data-lang="bash"><code>curl -fsSL https://claude.ai/install.sh | bash
 curl -fsSL https://agent-logs.chibatech.dev/install.sh | bash</code></pre>
@@ -738,9 +743,9 @@ bash install.sh    # 確認したら実行</code></pre>
     </details>
 </section>
 
-<!-- 11 -->
-<section id="s11">
-    <h2><span class="num">11</span>よくあるトラブルと対処</h2>
+<!-- 12 -->
+<section id="s12">
+    <h2><span class="num">12</span>よくあるトラブルと対処</h2>
 
     <details class="m-note">
         <summary>▶ <code>wsl --install</code> で「仮想化が無効」と言われる</summary>
@@ -797,9 +802,9 @@ bash install.sh    # 確認したら実行</code></pre>
     </details>
 </section>
 
-<!-- 12 -->
-<section id="s12">
-    <h2><span class="num">12</span>アンインストール方法</h2>
+<!-- 13 -->
+<section id="s13">
+    <h2><span class="num">13</span>アンインストール方法</h2>
 
     <h3>agent-logs を削除</h3>
     <pre data-lang="bash"><code>agent-logs uninstall
