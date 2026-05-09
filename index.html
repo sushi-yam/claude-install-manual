@@ -549,6 +549,52 @@ Claude が使えるようになる</code></pre>
     <pre data-lang="bash"><code>mkdir -p ~/projects/my-first-project
 cd ~/projects/my-first-project</code></pre>
 
+    <details class="m-note">
+        <summary>▶ なぜフォルダを作る? / <code>mkdir</code>・<code>cd</code> って何?</summary>
+        <div class="m-note-body">
+            <h4>なぜ最初にフォルダを作るのか</h4>
+            <p>プロジェクトフォルダ毎に「共有する/しない」を選ぶ設計なので、まず作業フォルダに入った状態で <code>claude</code> を実行する必要があります。書斎の中に、最初の <strong>作業用ファイルキャビネット</strong> を1つ作って、その前に椅子を移動させた状態です。</p>
+
+            <h4>例えで言うと</h4>
+            <p>書斎(Ubuntu)の中で、<code>~</code>(ホームディレクトリ)は <strong>「自分の机のいちばん上の段」</strong> です。そこに <strong>棚を組み立てて、案件ごとの箱を入れて、その箱の前に椅子を寄せる</strong> ―― それを 2 行のコマンドでやっています。</p>
+
+            <h4><code>mkdir -p ~/projects/my-first-project</code></h4>
+            <p><code>mkdir</code> = <strong>make directory</strong>(ディレクトリ=フォルダを作る)。書斎の中に <strong>新しい引き出し(フォルダ)を作る</strong> 命令です。</p>
+            <table>
+                <thead><tr><th>部品</th><th>意味</th><th>例えで言うと</th></tr></thead>
+                <tbody>
+                    <tr><td><code>mkdir</code></td><td>フォルダを作る</td><td>「新しい引き出しを作って」</td></tr>
+                    <tr><td><code>-p</code></td><td>親フォルダがなければ一緒に作る</td><td>「棚ごと用意していい。すでにあれば そのまま使って」</td></tr>
+                    <tr><td><code>~</code></td><td>ホームディレクトリ(自分のスペース)</td><td>「自分の机のいちばん上の段」</td></tr>
+                    <tr><td><code>projects</code></td><td>親フォルダ</td><td>案件全体を入れる <strong>大きな棚</strong></td></tr>
+                    <tr><td><code>my-first-project</code></td><td>子フォルダ</td><td>その棚に置く <strong>個別の箱</strong></td></tr>
+                </tbody>
+            </table>
+            <p>つまりこのコマンド全体は ―― <strong>「自分の机に『projects』という棚を立てて(なければ)、その中に『my-first-project』という箱を入れておいて」</strong> という指示です。</p>
+            <div class="hint">💡 <strong><code>-p</code> がなぜ必要?</strong><br><code>projects</code> という棚がまだ存在しない場合、いきなり <code>my-first-project</code> の箱を入れようとすると「棚がないよ」と怒られます。<code>-p</code> を付けると「<strong>棚ごと、必要なら作っちゃっていいよ</strong>」という許可を出せます。</div>
+
+            <h4><code>cd ~/projects/my-first-project</code></h4>
+            <p><code>cd</code> = <strong>change directory</strong>(作業場所を変える)。<strong>いま作業している場所(椅子の位置)を、そのフォルダの中に移す</strong> 命令です。</p>
+            <table>
+                <thead><tr><th>部品</th><th>意味</th><th>例えで言うと</th></tr></thead>
+                <tbody>
+                    <tr><td><code>cd</code></td><td>作業場所を移動</td><td>「<strong>椅子をそこに動かして</strong>」</td></tr>
+                    <tr><td><code>~/projects/my-first-project</code></td><td>移動先</td><td>さっき作った箱の前</td></tr>
+                </tbody>
+            </table>
+            <p>ターミナルは「いまどこの引き出しの前に座っているか」を常に意識して動きます。<code>cd</code> は <strong>その「どこ」を切り替える</strong> コマンドです。</p>
+            <div class="hint">💡 <strong>いまどこにいるか確認したいときは:</strong><br><code>pwd</code>(print working directory)を打つと、現在の引き出しの場所が表示されます。</div>
+
+            <h4>この2行を実行した結果</h4>
+            <p>書斎(Ubuntu)の中で、こうなった状態です:</p>
+            <pre><code>~  (自分の机)
+└── projects/  ← 棚を立てた
+     └── my-first-project/  ← その中に箱を作った
+          ▲ いまここに椅子を寄せた(👤)</code></pre>
+            <p>この箱の中に Claude を呼び込めば、<strong>この箱の中の作業だけ</strong> がノートに記録される ―― という仕組みです。</p>
+        </div>
+    </details>
+
     <h3>9-2. claude を起動</h3>
     <pre data-lang="bash"><code>claude</code></pre>
 
@@ -665,54 +711,6 @@ Logged in as tanaka@chibatech.ac.jp</code></pre>
     <div class="ok"><strong>✅ 成功サイン</strong>:Claude が応答する。<strong>おめでとうございます。書斎の建設は完了です。</strong></div>
 
     <p class="hint"><strong>2回目以降</strong>の <code>claude</code> 実行では、メール認証も OAuth も省略され、共有可否も新しいフォルダのときだけ聞かれます。普通に <code>claude</code> を打つだけで起動します。</p>
-
-    <details class="m-note">
-        <summary>▶ 9-1 のフォルダを作る理由 / <code>mkdir</code>・<code>cd</code> って何?</summary>
-        <div class="m-note-body">
-            <h4>なぜ最初にフォルダを作るのか</h4>
-            <p>プロジェクトフォルダ毎に「共有する/しない」を選ぶ設計なので、まず作業フォルダに入った状態で <code>claude</code> を実行する必要があります。書斎の中に、最初の <strong>作業用ファイルキャビネット</strong> を1つ作って、その前に椅子を移動させた状態です。</p>
-
-            <h4>例えで言うと</h4>
-            <p>書斎(Ubuntu)の中で、<code>~</code>(ホームディレクトリ)は <strong>「自分の机のいちばん上の段」</strong> です。そこに <strong>棚を組み立てて、案件ごとの箱を入れて、その箱の前に椅子を寄せる</strong> ―― それを 2 行のコマンドでやっています。</p>
-            <pre data-lang="bash"><code>mkdir -p ~/projects/my-first-project
-cd ~/projects/my-first-project</code></pre>
-
-            <h4><code>mkdir -p ~/projects/my-first-project</code></h4>
-            <p><code>mkdir</code> = <strong>make directory</strong>(ディレクトリ=フォルダを作る)。書斎の中に <strong>新しい引き出し(フォルダ)を作る</strong> 命令です。</p>
-            <table>
-                <thead><tr><th>部品</th><th>意味</th><th>例えで言うと</th></tr></thead>
-                <tbody>
-                    <tr><td><code>mkdir</code></td><td>フォルダを作る</td><td>「新しい引き出しを作って」</td></tr>
-                    <tr><td><code>-p</code></td><td>親フォルダがなければ一緒に作る</td><td>「棚ごと用意していい。すでにあれば そのまま使って」</td></tr>
-                    <tr><td><code>~</code></td><td>ホームディレクトリ(自分のスペース)</td><td>「自分の机のいちばん上の段」</td></tr>
-                    <tr><td><code>projects</code></td><td>親フォルダ</td><td>案件全体を入れる <strong>大きな棚</strong></td></tr>
-                    <tr><td><code>my-first-project</code></td><td>子フォルダ</td><td>その棚に置く <strong>個別の箱</strong></td></tr>
-                </tbody>
-            </table>
-            <p>つまりこのコマンド全体は ―― <strong>「自分の机に『projects』という棚を立てて(なければ)、その中に『my-first-project』という箱を入れておいて」</strong> という指示です。</p>
-            <div class="hint">💡 <strong><code>-p</code> がなぜ必要?</strong><br><code>projects</code> という棚がまだ存在しない場合、いきなり <code>my-first-project</code> の箱を入れようとすると「棚がないよ」と怒られます。<code>-p</code> を付けると「<strong>棚ごと、必要なら作っちゃっていいよ</strong>」という許可を出せます。</div>
-
-            <h4><code>cd ~/projects/my-first-project</code></h4>
-            <p><code>cd</code> = <strong>change directory</strong>(作業場所を変える)。<strong>いま作業している場所(椅子の位置)を、そのフォルダの中に移す</strong> 命令です。</p>
-            <table>
-                <thead><tr><th>部品</th><th>意味</th><th>例えで言うと</th></tr></thead>
-                <tbody>
-                    <tr><td><code>cd</code></td><td>作業場所を移動</td><td>「<strong>椅子をそこに動かして</strong>」</td></tr>
-                    <tr><td><code>~/projects/my-first-project</code></td><td>移動先</td><td>さっき作った箱の前</td></tr>
-                </tbody>
-            </table>
-            <p>ターミナルは「いまどこの引き出しの前に座っているか」を常に意識して動きます。<code>cd</code> は <strong>その「どこ」を切り替える</strong> コマンドです。</p>
-            <div class="hint">💡 <strong>いまどこにいるか確認したいときは:</strong><br><code>pwd</code>(print working directory)を打つと、現在の引き出しの場所が表示されます。</div>
-
-            <h4>この2行を実行した結果</h4>
-            <p>書斎(Ubuntu)の中で、こうなった状態です:</p>
-            <pre><code>~  (自分の机)
-└── projects/  ← 棚を立てた
-     └── my-first-project/  ← その中に箱を作った
-          ▲ いまここに椅子を寄せた(👤)</code></pre>
-            <p>この箱の中に Claude を呼び込めば、<strong>この箱の中の作業だけ</strong> がノートに記録される ―― という仕組みです。</p>
-        </div>
-    </details>
 </section>
 
 <!-- 10 -->
