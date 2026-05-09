@@ -204,8 +204,6 @@ Installing, this may take a few minutes...
 2. Antigravity から **WSL Ubuntu に接続** する
 3. **ターミナルを表示** する
 
-➡️ **[次のセクション](#4-ステップ2ubuntu-のターミナルを開く) へ進んでください。**
-
 <details>
 <summary>▶ 📖 例えで詳しく理解する</summary>
 
